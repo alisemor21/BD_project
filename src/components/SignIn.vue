@@ -29,7 +29,7 @@
             </v-flex>
             <v-flex class="text-xs-center" mt-5>
               <div class="enterBtn">
-                <v-btn color="rgb(109, 152, 134)" type="submit">Войти</v-btn>
+                <v-btn @click="onLoginClicked" color="rgb(109, 152, 134)" type="submit">Войти</v-btn>
               </div>
 
 
@@ -47,12 +47,10 @@ export default {
   components: {
 
   },
-  mounted() {
-    const enterBtn = document.querySelector(".enterBtn");
-    enterBtn.addEventListener("click", ($event) => {
-      console.warn($event);
+  methods: {
+    onLoginClicked() {
       this.$router.push("/");
-    });
+    },
   },
 };
 </script>

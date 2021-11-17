@@ -1,15 +1,12 @@
 <template>
   <div class="all">
-
-
-  <h1>ЗАДАНИЯ</h1>
-  <!-- <p>SOME TEXT</p> -->
-
+    
+    <h1>ЗАДАНИЯ</h1>
   </div>
 </template>
 
-<script>
 
+<script>
 
 
 

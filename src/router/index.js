@@ -53,15 +53,7 @@ const routes = [
     },
     component: () => import('@/pages/ReportsPage.vue')
   }
-  ,
-  {
-    path: '/reports/create-report',
-    name: 'Окно создания отчёта',
-    meta: {
-      title: 'Окно создания отчёта'
-    },
-    component: () => import('@/pages/CreateReportPage.vue')
-  }
+  
   
   
 
