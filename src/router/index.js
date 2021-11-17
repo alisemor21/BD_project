@@ -53,11 +53,6 @@ const routes = [
     },
     component: () => import('@/pages/ReportsPage.vue')
   }
-  
-  
-  
-
-
 ]
 
 const router = new VueRouter({
