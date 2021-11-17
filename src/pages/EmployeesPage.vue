@@ -72,25 +72,13 @@
 					item-key="name"
 					class="elevation-1"
 				>
-					<template v-slot:items="{ item, index }">
-            {{index}}
-						<td>{{ item.name }}</td>
-						<td class="text-xs-right">{{item.calories }}</td>
-						<td class="text-xs-right">{{ item.fat }}</td>
-						<td class="text-xs-right">{{ item.carbs }}</td>
-						<td class="text-xs-right">{{ item.protein }}</td>
-						<td class="justify-center">
-							<v-icon
-								small
-								class="mr-2"
-								@click="editItem(item)"
-							>
-								edit
-							</v-icon>
-							<v-icon small @click="deleteItem(item)">
-								delete
-							</v-icon>
-						</td>
+					<template v-slot:item.edit="{ item }">
+						<v-icon class="mr-2" @click="editItem(item)">
+							edit
+						</v-icon>
+					</template>
+					<template v-slot:item.delete="{ item }">
+						<v-icon @click="deleteItem(item)"> delete </v-icon>
 					</template>
 				</v-data-table>
 			</div>
@@ -105,6 +93,7 @@ export default {
 		dialog: false,
 		expand: [],
 		headers: [
+			{ text: '', value: 'edit', sortable: false },
 			{
 				text: 'Dessert (100g serving)',
 				align: 'left',
@@ -115,7 +104,7 @@ export default {
 			{ text: 'Fat (g)', value: 'fat' },
 			{ text: 'Carbs (g)', value: 'carbs' },
 			{ text: 'Protein (g)', value: 'protein' },
-			{ text: 'Actions', value: 'actions', sortable: false },
+			{ text: '', value: 'delete', sortable: false },
 		],
 		desserts: [],
 		editedIndex: -1,
@@ -147,9 +136,9 @@ export default {
 		},
 	},
 
-  created() {
-    this.desserts = [this.defaultItem]
-  },
+	created() {
+		this.desserts = [this.defaultItem];
+	},
 
 	methods: {
 		editItem(item) {
