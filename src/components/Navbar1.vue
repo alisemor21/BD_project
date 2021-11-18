@@ -6,8 +6,10 @@
 				v-for="item in menuItems"
 				:key="item.title"
 				:to="item.path"
+        :color="item.backgroundcolor"
+        :exact-active-class="item.color" 
 			>
-				<v-icon left dark>{{ item.icon }}</v-icon>
+				<v-icon left dark >{{ item.icon }}</v-icon>
 				{{ item.title }}
 			</v-btn>
 		</v-toolbar-items>
@@ -16,25 +18,27 @@
 
 <script>
 export default {
-	name: 'App',
+	name: 'Navbar1',
 	data() {
 		return {
-			appTitle: 'Awesome App',
+			
 			sidebar: false,
 			menuItems: [
-				{ title: 'Аккаунт', path: '/', icon: 'account_circle' },
-				{ title: 'Задания', path: '/tasks', icon: 'task_alt' },
+				{ title: 'Аккаунт', path: '/', icon: 'account_circle',backgroundcolor:'rgb(217, 202, 179)'},
+				{ title: 'Задания', path: '/tasks', icon: 'task_alt',backgroundcolor:'rgb(217, 202, 179)'},
 				{
 					title: 'Сотрудники',
 					path: '/employees',
 					icon: 'supervisor_account',
+          backgroundcolor:'rgb(217, 202, 179)'
 				},
 				{
 					title: 'Клиенты',
 					path: '/clients',
 					icon: 'settings_accessibility',
+          backgroundcolor:'rgb(217, 202, 179)'
 				},
-				{ title: 'Отчёты', path: '/reports', icon: 'summarize' },
+				{ title: 'Отчёты', path: '/reports', icon: 'summarize',backgroundcolor:'rgb(217, 202, 179)'},
 			],
 		};
 	},
