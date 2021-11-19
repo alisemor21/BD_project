@@ -5,7 +5,7 @@
     
 
     
-      <v-btn @click="onLogoutClicked" rounded elevation="8" color="rgb(109, 152, 134)" dark>
+      <v-btn @click="onLogoutClicked" rounded elevation="8" color="light-blue accent-3" dark>
         Выйти из аккаунта
       </v-btn>
     

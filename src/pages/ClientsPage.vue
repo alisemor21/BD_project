@@ -4,20 +4,20 @@
       <div>
         <v-toolbar color="white">
           <v-toolbar-title>Все клиенты</v-toolbar-title>
-          <v-divider class="mx-2" inset vertical></v-divider>
+          <v-divider class="mx-3" inset vertical></v-divider>
           <v-spacer></v-spacer>
           <v-text-field
             v-model="search"
             append-icon="mdi-magnify"
             label="Search"
             single-line
-            color="rgb(109, 152, 134)"
+            color="light-blue accent-3"
             hide-details
           ></v-text-field>
           <v-spacer></v-spacer>
           <v-dialog v-model="dialog" max-width="500px">
             <template v-slot:activator="{ on }">
-              <v-btn color="rgb(109, 152, 134)" dark class="mb-2" v-on="on"
+              <v-btn color="light-blue accent-3" dark class="mb-2" v-on="on"
                 >+ Новый клиент</v-btn
               >
             </template>
@@ -34,7 +34,7 @@
                         v-model="editedItem.status"
                         :items="['FUTURE', 'CURRENT', 'INACTIVE']"
                         label="Статус*"
-                        color="rgb(109, 152, 134)"
+                        color="light-blue accent-3"
                         required
                       ></v-select>
                     </v-flex>
@@ -43,7 +43,7 @@
                       <v-text-field
                         v-model="editedItem.inn"
                         label="ИНН"
-                        color="rgb(109, 152, 134)"
+                        color="light-blue accent-3"
                       ></v-text-field>
                     </v-flex>
 
@@ -51,7 +51,7 @@
                       <v-text-field
                         v-model="editedItem.city"
                         label="Город"
-                        color="rgb(109, 152, 134)"
+                        color="light-blue accent-3"
                       ></v-text-field>
                     </v-flex>
 
@@ -60,21 +60,21 @@
                         v-model="editedItem.name"
                         label="ФИО"
                         hint="фамилия имя отчество через пробел"
-                        color="rgb(109, 152, 134)"
+                        color="light-blue accent-3"
                       ></v-text-field>
                     </v-flex>
                     <v-flex xs12 sm4 md4>
                       <v-text-field
                         v-model="editedItem.phone"
                         label="Телефон"
-                        color="rgb(109, 152, 134)"
+                        color="light-blue accent-3"
                       ></v-text-field>
                     </v-flex>
                     <v-flex xs12 sm8 md8>
                       <v-text-field
                         v-model="editedItem.email"
                         label="Email"
-                        color="rgb(109, 152, 134)"
+                        color="light-blue accent-3"
                       ></v-text-field>
                     </v-flex>
 
@@ -82,7 +82,7 @@
                       <v-text-field
                         v-model="editedItem.address"
                         label="Адрес"
-                        color="rgb(109, 152, 134)"
+                        color="light-blue accent-3"
                       ></v-text-field>
                     </v-flex>
 
@@ -90,7 +90,7 @@
                       <v-text-field
                         v-model="editedItem.fax"
                         label="fax"
-                        color="rgb(109, 152, 134)"
+                        color="light-blue accent-3"
                       ></v-text-field>
                     </v-flex>
 
@@ -100,7 +100,7 @@
                         label="Юр. лицо?"
                         hide-details
                         class="shrink mr-2 mt-0"
-                        color="rgb(109, 152, 134)"
+                        color="light-blue accent-3"
                       ></v-checkbox>
                     </v-flex>
 
@@ -109,7 +109,7 @@
                         v-model="editedItem.companyId"
                         :disabled="!isCompany"
                         label="Название компании"
-                        color="rgb(109, 152, 134)"
+                        color="light-blue accent-3"
                       ></v-text-field>
                     </v-flex>
 
@@ -118,7 +118,7 @@
                         v-model="editedItem.ogrn"
                         :disabled="!isCompany"
                         label="ОГРН"
-                        color="rgb(109, 152, 134)"
+                        color="light-blue accent-3"
                       ></v-text-field>
                     </v-flex>
                   </v-layout>
@@ -127,10 +127,10 @@
 
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="rgb(109, 152, 134)" @click="close"
+                <v-btn color="light-blue accent-3" @click="close"
                   >Отменить</v-btn
                 >
-                <v-btn color="rgb(109, 152, 134)" @click="save"
+                <v-btn color="green accent-2" @click="save"
                   >Сохранить</v-btn
                 >
               </v-card-actions>
@@ -147,16 +147,16 @@
           :expanded.sync="expanded"
           show-expand
         >
-          <template v-slot:item.status="{ item }">
-            <v-chip :color="getColor(item.status)" dark>
+          <template v-slot:item.status="{ item }" dark>
+            <v-chip :color="getColor(item.status)">
               {{ item.status }}
             </v-chip>
           </template>
 
           <template v-slot:item.edit="{ item }">
             <v-icon
-              color="rgb(109, 152, 134)"
-              class="mr-2"
+              color="green darken-1"
+              
               @click="editItem(item)"
             >
               edit
@@ -167,7 +167,7 @@
           </template>
 
           <template v-slot:expanded-item="{ headers, item }">
-          <td :colspan="headers.length">Контактные лица {{ item.name }} {{ item.name }}</td>
+          <td :colspan="headers.length">Контактные лица {{ item.name }}</td>
         </template>
 
         </v-data-table>
@@ -214,7 +214,7 @@ export default {
       ogrn: "",
     },
     defaultItem: {
-      status: "",
+      status: "CURRENT",
       name: "",
       email: "",
       phone: "",
@@ -241,16 +241,13 @@ export default {
     },
   },
 
-  created() {
-    this.clients = [this.defaultItem];
-  },
+
 
   methods: {
     getColor(status) {
-      if (status == "CURRENT") return "green";
-      else if (status == "INACTIVE") return "brown";
-      else if (status == "FUTURE") return "brown";
-      else return "WHITE";
+      if (status == "CURRENT") return "green accent-2";
+      else if (status == "INACTIVE") return "grey lighten-1";
+      else if (status == "FUTURE") return "cyan accent-1";
     },
 
     editItem(item) {

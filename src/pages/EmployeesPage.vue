@@ -3,20 +3,20 @@
     <template>
       <v-toolbar flat color="white">
         <v-toolbar-title>Все сотрудники</v-toolbar-title>
-        <v-divider class="mx-2" inset vertical></v-divider>
+        <v-divider class="mx-3" inset vertical></v-divider>
         <v-spacer></v-spacer>
         <v-text-field
           v-model="search"
           append-icon="mdi-magnify"
           label="Search"
-          single-line
-          color="rgb(109, 152, 134)"
+           single-line
+          color="light-blue accent-3"
           hide-details
         ></v-text-field>
         <v-spacer></v-spacer>
         <v-dialog v-model="dialog" max-width="500px">
           <template v-slot:activator="{ on }">
-            <v-btn color="rgb(109, 152, 134)" dark class="mb-2" v-on="on"
+            <v-btn color="light-blue accent-3" dark class="mb-2" v-on="on"
               >+ Создать нового сотрудника</v-btn
             >
           </template>
@@ -34,7 +34,7 @@
                       v-model="editedItem.name"
                       label="ФИО"
                       hint="фамилия имя отчество через пробел"
-                      color="rgb(109, 152, 134)"
+                      color="light-blue accent-3"
                     ></v-text-field>
                   </v-flex>
 
@@ -42,8 +42,8 @@
                     <v-select
                       v-model="editedItem.role"
                       :items="['MANAGER', 'ADMIN', 'COMMON']"
-                      label="Role*"
-                      color="rgb(109, 152, 134)"
+                      label="Роль*"
+                      color="light-blue accent-3"
                       required
                     ></v-select>
                   </v-flex>
@@ -52,7 +52,7 @@
                     <v-text-field
                       v-model="editedItem.login"
                       label="Login"
-                      color="rgb(109, 152, 134)"
+                      color="light-blue accent-3"
                     ></v-text-field>
                   </v-flex>
 
@@ -61,7 +61,7 @@
                       v-model="editedItem.password"
                       label="Password"
                       type="password"
-                      color="rgb(109, 152, 134)"
+                      color="light-blue accent-3"
                     ></v-text-field>
                   </v-flex>
                 </v-layout>
@@ -70,8 +70,8 @@
 
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="rgb(109, 152, 134)" @click="close">Отменить</v-btn>
-              <v-btn color="rgb(109, 152, 134)" @click="save">Сохранить</v-btn>
+              <v-btn color="light-blue accent-3" @click="close">Отменить</v-btn>
+              <v-btn color="green accent-2" @click="save">Сохранить</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -84,16 +84,16 @@
         :search="search"
         
       >
-        <template v-slot:item.role="{ item }">
-          <v-chip :color="getColor(item.role)" dark>
+        <template v-slot:item.role="{ item }" dark>
+          <v-chip :color="getColor(item.role)">
             {{ item.role }}
           </v-chip>
         </template>
 
         <template v-slot:item.edit="{ item }">
           <v-icon
-            color="rgb(109, 152, 134)"
-            class="mr-2"
+            color="green darken-1"
+            
             @click="editItem(item)"
           >
             edit
@@ -156,15 +156,13 @@ export default {
     },
   },
 
-  created() {
-    this.employees = [this.defaultItem];
-  },
+
 
   methods: {
     getColor(role) {
-      if (role == "ADMIN") return "red";
-      else if (role == "MANAGER") return "blue";
-      else return "green";
+      if (role == "ADMIN") return "orange accent-4";
+      else if (role == "MANAGER") return "cyan accent-1";
+      else if (role == "COMMON") return "green accent-2";
     },
 
     editItem(item) {

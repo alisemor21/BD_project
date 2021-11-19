@@ -13,7 +13,7 @@
                 label="Login"
                 id="login"
                 type="login"
-                color="rgb(109, 152, 134)"
+                color="light-blue accent-3"
                 required
               ></v-text-field>
             </v-flex>
@@ -23,13 +23,13 @@
                 label="Password"
                 id="password"
                 type="password"
-                color="rgb(109, 152, 134)"
+                color="light-blue accent-3"
                 required
               ></v-text-field>
             </v-flex>
             <v-flex class="text-xs-center" mt-5>
               <div class="enterBtn">
-                <v-btn @click="onLoginClicked" color="rgb(109, 152, 134)" type="submit">Войти</v-btn>
+                <v-btn @click="onLoginClicked" color="light-blue accent-3" type="submit">Войти</v-btn>
               </div>
 
 

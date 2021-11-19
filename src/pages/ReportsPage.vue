@@ -11,13 +11,13 @@
             append-icon="mdi-magnify"
             label="Search"
             single-line
-            color="rgb(109, 152, 134)"
+            color="light-blue accent-3"
             hide-details
           ></v-text-field>
           <v-spacer></v-spacer>
           <v-dialog v-model="dialog" max-width="500px">
             <template v-slot:activator="{ on }">
-              <v-btn color="rgb(109, 152, 134)" dark class="mb-2" v-on="on"
+              <v-btn color="light-blue accent-3" dark class="mb-2" v-on="on"
                 >+ Создать новый отчёт</v-btn
               >
             </template>
@@ -85,7 +85,7 @@
             <v-icon class="mr-2" @click="editItem(item)"> edit </v-icon>
           </template> -->
           <template v-slot:item.download="{ item }">
-            <v-icon color="blue" @click="downloadItem(item)"> download </v-icon>
+            <v-icon color="light-blue accent-3" @click="downloadItem(item)"> download </v-icon>
           </template>
         </v-data-table>
       </div>
@@ -142,9 +142,7 @@ export default {
     },
   },
 
-  created() {
-    this.reports = [this.defaultItem];
-  },
+
 
   methods: {
     // editItem(item) {

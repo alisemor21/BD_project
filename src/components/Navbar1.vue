@@ -24,21 +24,21 @@ export default {
 			
 			sidebar: false,
 			menuItems: [
-				{ title: 'Аккаунт', path: '/', icon: 'account_circle',backgroundcolor:'rgb(217, 202, 179)'},
-				{ title: 'Задания', path: '/tasks', icon: 'task_alt',backgroundcolor:'rgb(217, 202, 179)'},
+				{ title: 'Аккаунт', path: '/', icon: 'account_circle',backgroundcolor:'amber lighten-3'},
+				{ title: 'Задания', path: '/tasks', icon: 'task_alt',backgroundcolor:'amber lighten-3'},
 				{
 					title: 'Сотрудники',
 					path: '/employees',
 					icon: 'supervisor_account',
-          backgroundcolor:'rgb(217, 202, 179)'
+          backgroundcolor:'amber lighten-3'
 				},
 				{
 					title: 'Клиенты',
 					path: '/clients',
 					icon: 'settings_accessibility',
-          backgroundcolor:'rgb(217, 202, 179)'
+          backgroundcolor:'amber lighten-3'
 				},
-				{ title: 'Отчёты', path: '/reports', icon: 'summarize',backgroundcolor:'rgb(217, 202, 179)'},
+				{ title: 'Отчёты', path: '/reports', icon: 'summarize',backgroundcolor:'amber lighten-3'},
 			],
 		};
 	},
