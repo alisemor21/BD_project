@@ -34,7 +34,7 @@
                         v-model="editedItem.employee"
                         :items="['Андрей', 'Паша', 'Петя']"
                         label="Работник*"
-                        color="rgb(109, 152, 134)"
+                        color="light-blue accent-3"
                         required
                       ></v-autocomplete>
                     </v-flex>
@@ -44,7 +44,7 @@
                         v-model="editedItem.startDate"
                         label="Дата начала отчёта*"
                         type="date"
-                        color="rgb(109, 152, 134)"
+                        color="light-blue accent-3"
                         required
                       ></v-text-field>
                     </v-flex>
@@ -54,7 +54,7 @@
                         v-model="editedItem.endDate"
                         label="Дата окончания отчёта*"
                         type="date"
-                        color="rgb(109, 152, 134)"
+                        color="light-blue accent-3"
                         required
                       ></v-text-field>
                     </v-flex>
@@ -64,10 +64,10 @@
 
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="rgb(109, 152, 134)" @click="close"
+                <v-btn color="light-blue accent-3" @click="close"
                   >Отменить</v-btn
                 >
-                <v-btn color="rgb(109, 152, 134)" @click="save"
+                <v-btn color="green accent-2" @click="save"
                   >Сохранить</v-btn
                 >
               </v-card-actions>

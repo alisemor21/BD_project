@@ -9,7 +9,6 @@
           v-model="search"
           append-icon="mdi-magnify"
           label="Search"
-           single-line
           color="light-blue accent-3"
           hide-details
         ></v-text-field>

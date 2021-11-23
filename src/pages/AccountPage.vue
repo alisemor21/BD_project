@@ -1,14 +1,17 @@
 <template>
   <div class="all">
-    <h2>Алиса</h2>
-    <h3>MANAGER</h3>
-    
+    <h2>User</h2>
+    <h3>User.role</h3>
 
-    
-      <v-btn @click="onLogoutClicked" rounded elevation="8" color="light-blue accent-3" dark>
-        Выйти из аккаунта
-      </v-btn>
-    
+    <v-btn
+      @click="onLogoutClicked"
+      rounded
+      elevation="8"
+      color="light-blue accent-3"
+      dark
+    >
+      Выйти из аккаунта
+    </v-btn>
   </div>
 </template>
 <script>
@@ -20,6 +23,5 @@ export default {
       this.$router.push("/login");
     },
   },
-  
 };
 </script>
