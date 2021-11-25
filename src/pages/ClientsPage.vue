@@ -151,12 +151,12 @@
             </v-chip>
           </template>
 
-          <template v-slot:item.addContactFace="{  }">
+          <template v-slot:item.addContactFace="{}">
             <v-dialog v-model="dialogContactFaces" max-width="500px">
               <template v-slot:activator="{ on }">
-                 <v-icon  color="light-blue accent-3" dark v-on="on"
-                  >person_add_alt</v-icon>
-                
+                <v-icon color="light-blue accent-3" dark v-on="on"
+                  >person_add_alt</v-icon
+                >
               </template>
               <v-card>
                 <v-card-title>
@@ -195,8 +195,11 @@
                 <v-card-actions>
                   <v-spacer></v-spacer>
                   <v-btn color="light-blue accent-3" @click="closeContactFace"
-                    >Отменить контакт</v-btn>
-                  <v-btn color="green accent-2" @click="saveContactFace">Сохранить контакт</v-btn>
+                    >Отменить контакт</v-btn
+                  >
+                  <v-btn color="green accent-2" @click="saveContactFace"
+                    >Сохранить контакт</v-btn
+                  >
                 </v-card-actions>
               </v-card>
             </v-dialog>
@@ -208,13 +211,14 @@
             </v-icon>
           </template>
           <template v-slot:item.delete="{ item }">
-            <v-icon color="red" @click="deleteClient
-            (item)"> delete </v-icon>
+            <v-icon color="red" @click="deleteClient(item)"> delete </v-icon>
           </template>
 
-          <template v-slot:expanded-item="{ headers,item }">
-            <td :colspan="headers.length">Контактные лица {{ item.name }}: {{ contactFace.name }} {{ contactFace.phone }} {{ contactFace.email }}</td>
-          
+          <template v-slot:expanded-item="{ headers, item }">
+            <td :colspan="headers.length">
+              Контактные лица {{ item.name }}: {{ contactFace.name }}
+              {{ contactFace.phone }} {{ contactFace.email }}
+            </td>
           </template>
         </v-data-table>
       </div>
@@ -244,6 +248,7 @@ export default {
       { text: "Компания", value: "companyId" },
       { text: "ОГРН", value: "ogrn" },
 
+
       { text: "", value: "addContactFace", sortable: false },
       { text: "", value: "edit", sortable: false },
       { text: "", value: "delete", sortable: false },
@@ -257,6 +262,15 @@ export default {
 
     //   { text: "", value: "edit", sortable: false },
     //   { text: "", value: "delete", sortable: false },
+    // ],
+
+    // clients:[
+    //   {
+    //     contactFaces:[
+
+    //     ]
+
+    //   }
     // ],
 
     clients: [],
@@ -302,7 +316,7 @@ export default {
 
   computed: {
     formTitle() {
-      return this.editedClientInd === -1
+      return this.editedClientIndex === -1
         ? "Новый клиент"
         : "Редактирование клиента";
     },
@@ -315,12 +329,15 @@ export default {
 
   watch: {
     dialog(val) {
+      console.log('Dialog.val =' , val)
       val || this.close();
     },
 
     dialogContactFaces(val) {
-      val || this.close();
+      console.log('DialogContactFaces.val =' , val)
+      val || this.closeContactFace();
     },
+
   },
 
   methods: {
@@ -331,13 +348,12 @@ export default {
     },
 
     editClient(item) {
-      this.editedClientInd = this.clients.indexOf(item);
+      this.editedClientIndex = this.clients.indexOf(item);
       this.editedClient = Object.assign({}, item);
       this.dialog = true;
     },
 
-    deleteClient
-    (item) {
+    deleteClient(item) {
       const index = this.clients.indexOf(item);
       confirm("Are you sure you want to delete this item?") &&
         this.clients.splice(index, 1);
@@ -352,7 +368,7 @@ export default {
     },
 
     save() {
-      if (this.editedClientInd > -1) {
+      if (this.editedClientIndex > -1) {
         Object.assign(this.clients[this.editedClientIndex], this.editedClient);
       } else {
         this.clients.push(this.editedClient);
@@ -379,8 +395,8 @@ export default {
     // },
 
     saveContactFace() {
-      if (this.editedClient > -1) {
-        Object.assign(this.clients[this.editedClientIndex], this.contactFace);
+      if (this.editedContactFaceIndex > -1) {
+        Object.assign(this.clients[this.editedContactFaceIndex], this.contactFace);
       } else {
         this.contactFaces.push(this.contactFace);
       }
@@ -397,9 +413,11 @@ export default {
     },
 
     editContactFaces(item) {
+      console.log("editedContactFaces", item);
       this.editedContactFaceIndex = this.clients.indexOf(item);
       this.contactFace = Object.assign({}, item);
       this.dialogContactFaces = true;
+
     },
   },
 };

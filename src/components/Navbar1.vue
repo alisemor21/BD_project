@@ -21,23 +21,12 @@ export default {
 	name: 'Navbar1',
 	data() {
 		return {
-			
 			sidebar: false,
 			menuItems: [
 				{ title: 'Аккаунт', path: '/', icon: 'account_circle',backgroundcolor:'amber lighten-3'},
 				{ title: 'Задания', path: '/tasks', icon: 'task_alt',backgroundcolor:'amber lighten-3'},
-				{
-					title: 'Сотрудники',
-					path: '/employees',
-					icon: 'supervisor_account',
-          backgroundcolor:'amber lighten-3'
-				},
-				{
-					title: 'Клиенты',
-					path: '/clients',
-					icon: 'settings_accessibility',
-          backgroundcolor:'amber lighten-3'
-				},
+				{ title: 'Сотрудники', path: '/employees',icon: 'supervisor_account', backgroundcolor:'amber lighten-3'},
+				{ title: 'Клиенты', path: '/clients', icon: 'settings_accessibility', backgroundcolor:'amber lighten-3'},
 				{ title: 'Отчёты', path: '/reports', icon: 'summarize',backgroundcolor:'amber lighten-3'},
 			],
 		};
