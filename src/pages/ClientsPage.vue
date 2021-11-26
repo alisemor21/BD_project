@@ -67,7 +67,6 @@
 		<ClientControlModal
 			v-if="clientModalVisible"
 			ref="clientControlModal"
-			:currentClient.sync="currentClient"
 			@done="onCliendModalDone"
 		/>
 	</div>
