@@ -53,9 +53,7 @@ export default {
 	props: ['currentContactFace'],
 	data: () => ({
 		dialogContactFaces: false,
-		expanded: [],
-
-		editedContactFaceIndex: -1,
+		modalMode: null,
 		editedContactFace: {
 			name: '',
 			email: '',
@@ -71,7 +69,7 @@ export default {
 
 	computed: {
 		formTitleContactFaces() {
-			return this.modalModeContactFace === -1
+			return this.modalMode === -1
 				? 'Новый контакт'
 				: 'Редактирование контакта';
 		},
@@ -90,7 +88,7 @@ export default {
 			if (contactFace) {
 				this.editedContactFace = contactFace;
 			}
-			this.modalModeContactFace = contactFace ? 'edit' : 'create';
+			this.modalMode = contactFace ? 'edit' : 'create';
 			this.dialogContactFaces = true;
 		},
 		closeContactFaceModal() {
@@ -99,64 +97,15 @@ export default {
 		},
 
 		saveContactFaceModal() {
-			const contactFace = this.modalModeContactFace === 'create'
+			const contactFace = this.modalMode === 'create'
 				? {
 					...this.editedContactFace,
 					id: Date.now().toString(),
-					// contactFaces: [],
 					}
 				: this.editedContactFace;
-			this.$emit('doneContactFace', contactFace);
+			this.$emit('done', contactFace);
 			this.closeContactFaceModal();
 		},
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-		// saveContactFace() {
-		// 	if (this.editedContactFaceIndex > -1) {
-		// 		Object.assign(
-		// 			this.clients[this.editedContactFaceIndex],
-		// 			this.editedContactFace,
-		// 		);
-		// 	} else {
-		// 		this.contactFaces.push(this.editedContactFace);
-		// 	}
-		// 	this.close();
-		// 	this.dialogContactFaces = false;
-		// },
-
-		// closeContactFace() {
-		// 	this.dialogContactFaces = false;
-		// 	setTimeout(() => {
-		// 		this.editedContactFace = Object.assign({}, this.defaultContactFace);
-		// 		this.editedContactFaceIndex = -1;
-		// 	}, 300);
-		// },
-
-		// editContactFaces(item) {
-		//   console.log("editedContactFaces", item);
-		//   this.editedContactFaceIndex = this.clients.indexOf(item);
-		//   this.editedContactFace = Object.assign({}, item);
-		//   this.dialogContactFaces = true;
-
-		// },
 	},
 };
 </script>
