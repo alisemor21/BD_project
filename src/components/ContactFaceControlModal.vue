@@ -1,10 +1,5 @@
 <template>
 	<v-dialog v-model="dialogContactFaces" max-width="500px">
-		<template v-slot:activator="{ on }">
-			<v-icon v-on="on">
-				person_add_alt
-			</v-icon>
-		</template>
 		<v-card>
 			<v-card-title>
 				<span class="headline">{{ formTitleContactFaces }}</span>
@@ -15,7 +10,7 @@
 					<v-layout wrap>
 						<v-flex xs12 sm12 md12>
 							<v-text-field
-								v-model="contactFace.name"
+								v-model="editedContactFace.name"
 								label="ФИО"
 								hint="фамилия имя отчество через пробел"
 								color="light-blue accent-3"
@@ -23,14 +18,14 @@
 						</v-flex>
 						<v-flex xs12 sm4 md4>
 							<v-text-field
-								v-model="contactFace.phone"
+								v-model="editedContactFace.phone"
 								label="Телефон"
 								color="light-blue accent-3"
 							></v-text-field>
 						</v-flex>
 						<v-flex xs12 sm8 md8>
 							<v-text-field
-								v-model="contactFace.email"
+								v-model="editedContactFace.email"
 								label="Email"
 								color="light-blue accent-3"
 							></v-text-field>
@@ -41,10 +36,10 @@
 
 			<v-card-actions>
 				<v-spacer></v-spacer>
-				<v-btn color="light-blue accent-3" @click="closeContactFace"
+				<v-btn color="light-blue accent-3" @click="closeContactFaceModal"
 					>Отменить контакт</v-btn
 				>
-				<v-btn color="green accent-2" @click="saveContactFace"
+				<v-btn color="green accent-2" @click="saveContactFaceModal"
 					>Сохранить контакт</v-btn
 				>
 			</v-card-actions>
@@ -61,7 +56,7 @@ export default {
 		expanded: [],
 
 		editedContactFaceIndex: -1,
-		contactFace: {
+		editedContactFace: {
 			name: '',
 			email: '',
 			phone: '',
@@ -76,7 +71,7 @@ export default {
 
 	computed: {
 		formTitleContactFaces() {
-			return this.editedContactFaceIndex === -1
+			return this.modalModeContactFace === -1
 				? 'Новый контакт'
 				: 'Редактирование контакта';
 		},
@@ -85,36 +80,80 @@ export default {
 	watch: {
 		dialogContactFaces(val) {
 			console.log('DialogContactFaces.val =', val);
-			val || this.closeContactFace();
+			val || this.closeContactFaceModal();
 		},
 	},
 
 	methods: {
-		saveContactFace() {
-			if (this.editedContactFaceIndex > -1) {
-				Object.assign(
-					this.clients[this.editedContactFaceIndex],
-					this.contactFace,
-				);
-			} else {
-				this.contactFaces.push(this.contactFace);
+
+        openContactFaceModal(contactFace) {
+			if (contactFace) {
+				this.editedContactFace = contactFace;
 			}
-			this.close();
+			this.modalModeContactFace = contactFace ? 'edit' : 'create';
+			this.dialogContactFaces = true;
+		},
+		closeContactFaceModal() {
+			this.$emit('done', null);
 			this.dialogContactFaces = false;
 		},
 
-		closeContactFace() {
-			this.dialogContactFaces = false;
-			setTimeout(() => {
-				this.contactFace = Object.assign({}, this.defaultContactFace);
-				this.editedContactFaceIndex = -1;
-			}, 300);
+		saveContactFaceModal() {
+			const contactFace = this.modalModeContactFace === 'create'
+				? {
+					...this.editedContactFace,
+					id: Date.now().toString(),
+					// contactFaces: [],
+					}
+				: this.editedContactFace;
+			this.$emit('doneContactFace', contactFace);
+			this.closeContactFaceModal();
 		},
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		// saveContactFace() {
+		// 	if (this.editedContactFaceIndex > -1) {
+		// 		Object.assign(
+		// 			this.clients[this.editedContactFaceIndex],
+		// 			this.editedContactFace,
+		// 		);
+		// 	} else {
+		// 		this.contactFaces.push(this.editedContactFace);
+		// 	}
+		// 	this.close();
+		// 	this.dialogContactFaces = false;
+		// },
+
+		// closeContactFace() {
+		// 	this.dialogContactFaces = false;
+		// 	setTimeout(() => {
+		// 		this.editedContactFace = Object.assign({}, this.defaultContactFace);
+		// 		this.editedContactFaceIndex = -1;
+		// 	}, 300);
+		// },
 
 		// editContactFaces(item) {
 		//   console.log("editedContactFaces", item);
 		//   this.editedContactFaceIndex = this.clients.indexOf(item);
-		//   this.contactFace = Object.assign({}, item);
+		//   this.editedContactFace = Object.assign({}, item);
 		//   this.dialogContactFaces = true;
 
 		// },
