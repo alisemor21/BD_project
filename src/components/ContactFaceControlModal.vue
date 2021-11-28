@@ -53,7 +53,7 @@ export default {
 	props: ['currentContactFace'],
 	data: () => ({
 		dialogContactFaces: false,
-		modalMode: null,
+		modalMode: "create",
 		editedContactFace: {
 			name: '',
 			email: '',
@@ -69,7 +69,7 @@ export default {
 
 	computed: {
 		formTitleContactFaces() {
-			return this.modalMode === -1
+			return this.modalMode === 'create'
 				? 'Новый контакт'
 				: 'Редактирование контакта';
 		},

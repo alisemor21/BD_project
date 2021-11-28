@@ -1,8 +1,5 @@
 <template>
   <div class="all">
-    <h2>User</h2>
-    <h3>User.role</h3>
-
     <v-btn
       @click="onLogoutClicked"
       rounded
