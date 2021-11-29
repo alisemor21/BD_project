@@ -105,6 +105,9 @@
 </template>
 
 <script>
+
+import {getAllEmployees} from "@/netClient/employeesService";
+
 export default {
   name: "EmployeesPage",
   data: () => ({
@@ -116,7 +119,6 @@ export default {
       {
         text: "ФИО",
         align: "left",
-        // sortable: false,
         value: "name",
       },
       { text: "Должность сотрудника", value: "role" },
@@ -143,6 +145,11 @@ export default {
     formTitle() {
       return this.editedIndex === -1 ? "Создать" : "Редактировать";
     },
+  },
+  mounted(){
+
+    
+
   },
 
   watch: {

@@ -27,16 +27,6 @@
                 required
               ></v-text-field>
             </v-flex>
-            <v-flex>
-              <v-select
-                name="login"
-                label="Роль*"
-                id="login"
-                :items="['MANAGER', 'ADMIN', 'COMMON']"
-                color="light-blue accent-3"
-                required
-              ></v-select>
-            </v-flex>
             <v-flex class="text-xs-center" mt-5>
               <div class="enterBtn">
                 <v-btn
@@ -57,7 +47,12 @@
 <script>
 export default {
   name: "SignIn",
+  data:() =>({
+      login:'',
+      password:'',
+  }),
   components: {},
+  async mounted(){},
   methods: {
     onLoginClicked() {
       this.$router.push("/");
