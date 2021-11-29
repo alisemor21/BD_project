@@ -24,8 +24,7 @@ export async function doLogin(login, password) {
             login,
             password,
         })
-        console.log('/n/n/n/n/n/n/n/n', response.data, '/n/n/n/n/n/n/n/n')
-        const accessToken = response.data
+        const accessToken = response.data.accessToken
         localStorage.accessToken = accessToken;
         return accessToken;
     } catch (error) {

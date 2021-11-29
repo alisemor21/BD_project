@@ -6,7 +6,7 @@
     <template>
       <v-container fluid>
         <v-layout row wrap>
-          <v-form @submit.prevent="onSubmit" class="login-form auth-form">
+          <v-form  class="login-form auth-form">
             <v-flex xs6 offset-xs3 class="text-xs-center" mt-5>
               <h1>Аккаунт</h1>
             </v-flex>
@@ -39,7 +39,7 @@
                     <div class="enterBtn">
                       <v-btn 
                       @click="onSubmit"
-                      color="light-blue accent-3" type="submit"
+                      color="light-blue accent-3"
                         >Войти</v-btn
                       >
                     </div>

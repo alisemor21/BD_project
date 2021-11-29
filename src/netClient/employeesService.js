@@ -8,7 +8,7 @@ export async function getAllEmployees() {
         "x-access-token": localStorage.accessToken,
       },
     });
-    return response.data ?? [];
+    return response.data.employees ?? [];
   } catch (error) {
     console.error({ error });
     throw error;
