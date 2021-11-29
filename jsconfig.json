@@ -1,5 +1,11 @@
 {
-    "include": [
-      "./src/**/*"
-    ]
-  }
+	"compilerOptions": {
+		"baseUrl": "./",
+		"paths": {
+			"*": ["node_modules/*"],
+			"@/*": ["src/*"]
+		}
+	},
+	"include": ["./src/js/**/*"],
+	"exclude": ["node_modules"]
+}

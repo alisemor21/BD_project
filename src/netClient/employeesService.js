@@ -35,16 +35,19 @@ export async function getEmployeeById(id) {
 
 export async function createEmployee(name, role, login, password) {
   try {
-    const response = await http.post("/api/employees", {
-      name,
-      role,
-      login,
-      password,
-      headers: {
-        "Contentt-Type": "application/json",
-        "x-access-token": localStorage.accessToken,
+    const response = await http.post("/api/employees",
+      {
+        name,
+        role,
+        login,
+        password,
       },
-    });
+      {
+        headers: {
+          "Contentt-Type": "application/json",
+          "x-access-token": localStorage.accessToken,
+        },
+      });
     return response.data ?? [];
   } catch (error) {
     console.error({ error });
@@ -52,7 +55,7 @@ export async function createEmployee(name, role, login, password) {
   }
 }
 
-export async function doPatchEmployeeById(id, name, role, login, password) {
+export async function patchEmployeeById(id, name, role, login, password) {
   try {
     const response = await http.patch(
       "/api/employees/" + id,
