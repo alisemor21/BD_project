@@ -19,6 +19,7 @@ export default {
     onLogoutClicked() {
       this.$router.push("/login");
     },
+    
   },
 };
 </script>

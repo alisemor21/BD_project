@@ -202,9 +202,11 @@ export default {
             contactFaces.concat(contactFace);
         }
       }
+
       this.currentClient = null;
       this.currentContactFace = null;
       this.contactFacesModalVisible = false;
+      
     },
 
     getColor(status) {

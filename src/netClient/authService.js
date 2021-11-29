@@ -1,6 +1,6 @@
 import http from '@/netClient/config';
 
-export async function doRegister(login,password,email){
+export async function doRegister(login,password){
 
     try{
         const response = await http.post('/sa/api/auth/registration',{

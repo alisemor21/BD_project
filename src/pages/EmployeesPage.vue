@@ -237,6 +237,7 @@ export default {
 			// const index = this.employees.indexOf(item);
 			// confirm('Are you sure you want to delete this item?') &&
 			// 	this.employees.splice(index, 1);
+      
 		},
 
 		onModalCloseClicked() {
