@@ -1,5 +1,12 @@
 <template>
   <div class="all">
+    <ul>
+      <template v-if="employee">
+        <h1><li>{{this.employee.name}}</li></h1>
+        <h1><li>{{this.employee.role}}</li></h1>
+      </template>
+        
+      </ul>
     <v-btn
       @click="onLogoutClicked"
       rounded
@@ -12,11 +19,24 @@
   </div>
 </template>
 <script>
+import { getMyInfo } from "@/netClient/employeesService";
 export default {
   name: "AccountPage",
-  components: {},
+  data: () => ({
+    employee: null
+  }),
+  created() {
+    this.showMyInfo()
+  },
   methods: {
-    onLogoutClicked() {
+    async showMyInfo(){
+      try {
+        this.employee = await getMyInfo();
+      } catch (error) {
+        console.error({ error });
+      }
+    },
+    async onLogoutClicked() {
       this.$router.push("/login");
     },
     

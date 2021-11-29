@@ -33,6 +33,21 @@ export async function getEmployeeById(id) {
   }
 }
 
+export async function getMyInfo() {
+  try {
+    const response = await http.get("/api/employees/me", {
+      headers: {
+        "Content-Type": "application/json",
+        "x-access-token": localStorage.accessToken,
+      },
+    });
+    return response.data ?? {};
+  } catch (error) {
+    console.error({ error });
+    throw error;
+  }
+}
+
 export async function createEmployee(name, role, login, password) {
   try {
     const response = await http.post("/api/employees",

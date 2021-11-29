@@ -6,7 +6,6 @@
     <template>
       <v-container fluid>
         <v-layout row wrap>
-          <v-form  class="login-form auth-form">
             <v-flex xs6 offset-xs3 class="text-xs-center" mt-5>
               <h1>Аккаунт</h1>
             </v-flex>
@@ -47,7 +46,6 @@
                 </v-layout>
               </form>
             </v-flex>
-          </v-form>
         </v-layout>
       </v-container>
     </template>
