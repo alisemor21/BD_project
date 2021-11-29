@@ -6,7 +6,7 @@
     <template>
       <v-container fluid>
         <v-layout row wrap>
-          <v-form @submit.prevent="onFormSubmit" class="login-form auth-form">
+          <v-form @submit.prevent="onSubmit" class="login-form auth-form">
             <v-flex xs6 offset-xs3 class="text-xs-center" mt-5>
               <h1>Аккаунт</h1>
             </v-flex>
@@ -37,7 +37,9 @@
                   </v-flex>
                   <v-flex class="text-xs-center" mt-5>
                     <div class="enterBtn">
-                      <v-btn color="light-blue accent-3" type="submit"
+                      <v-btn 
+                      @click="onSubmit"
+                      color="light-blue accent-3" type="submit"
                         >Войти</v-btn
                       >
                     </div>
@@ -68,7 +70,7 @@ export default {
   },
   async mounted() {},
   methods: {
-    async onFormSubmit() {
+    async onSubmit() {
       try {
         const token = await doLogin(this.login.trim(), this.password.trim());
         console.warn({ token });
