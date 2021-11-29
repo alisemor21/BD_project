@@ -27,12 +27,25 @@
                 required
               ></v-text-field>
             </v-flex>
+            <v-flex>
+              <v-select
+                name="login"
+                label="Роль*"
+                id="login"
+                :items="['MANAGER', 'ADMIN', 'COMMON']"
+                color="light-blue accent-3"
+                required
+              ></v-select>
+            </v-flex>
             <v-flex class="text-xs-center" mt-5>
               <div class="enterBtn">
-                <v-btn @click="onLoginClicked" color="light-blue accent-3" type="submit">Войти</v-btn>
+                <v-btn
+                  @click="onLoginClicked"
+                  color="light-blue accent-3"
+                  type="submit"
+                  >Войти</v-btn
+                >
               </div>
-
-
             </v-flex>
           </v-layout>
         </form>
@@ -44,9 +57,7 @@
 <script>
 export default {
   name: "SignIn",
-  components: {
-
-  },
+  components: {},
   methods: {
     onLoginClicked() {
       this.$router.push("/");

@@ -15,9 +15,11 @@
         <v-spacer></v-spacer>
         <v-dialog v-model="dialog" max-width="500px">
           <template v-slot:activator="{ on }">
+            <template v-if="role === 'ADMIN' || role === 'MANAGER'">
             <v-btn color="light-blue accent-3" dark class="mb-2" v-on="on"
               >+ Создать новое задание</v-btn
             >
+            </template>
           </template>
 
           <v-card>
@@ -136,6 +138,7 @@
 export default {
   name: "TaskPage",
   data: () => ({
+    role:'MANAGER',
     dialog: false,
     expand: [],
     search: "",

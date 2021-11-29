@@ -15,9 +15,11 @@
         <v-spacer></v-spacer>
         <v-dialog v-model="dialog" max-width="500px">
           <template v-slot:activator="{ on }">
-            <v-btn color="light-blue accent-3" dark class="mb-2" v-on="on"
-              >+ Создать нового сотрудника</v-btn
-            >
+            <template v-if="role === 'ADMIN'">
+              <v-btn color="light-blue accent-3" dark class="mb-2" v-on="on"
+                >+ Создать нового сотрудника</v-btn
+              >
+            </template>
           </template>
 
           <v-card>
@@ -81,7 +83,6 @@
         item-key="name"
         class="elevation-1"
         :search="search"
-        
       >
         <template v-slot:item.role="{ item }" dark>
           <v-chip :color="getColor(item.role)">
@@ -89,20 +90,14 @@
           </v-chip>
         </template>
 
-        <template v-slot:item.edit="{ item }">
-          <v-icon
-            color="green darken-1"
-            
-            @click="editItem(item)"
-          >
-            edit
-          </v-icon>
+        <template v-if="role === 'ADMIN'" v-slot:item.edit="{ item }">
+          <v-icon color="green darken-1" @click="editItem(item)"> edit </v-icon>
         </template>
-        <template v-slot:item.delete="{ item }">
+
+        <template v-if="role === 'ADMIN'" v-slot:item.delete="{ item }">
           <v-icon color="red" @click="deleteItem(item)"> delete </v-icon>
         </template>
-        
-        
+
 
       </v-data-table>
     </template>
@@ -113,6 +108,7 @@
 export default {
   name: "EmployeesPage",
   data: () => ({
+    role: "ADMIN",
     dialog: false,
     expand: [],
     search: "",
@@ -154,8 +150,6 @@ export default {
       val || this.close();
     },
   },
-
-
 
   methods: {
     getColor(role) {

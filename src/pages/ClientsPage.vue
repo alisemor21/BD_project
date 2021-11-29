@@ -1,5 +1,6 @@
 <template>
   <div>
+	<template v-if="role === 'ADMIN'">
     <v-btn
       @click="startCreateClient"
       color="light-blue accent-3"
@@ -8,6 +9,7 @@
     >
       + Новый клиент
     </v-btn>
+	</template>
     <v-toolbar color="white">
       <v-toolbar-title>Все клиенты</v-toolbar-title>
       <v-divider class="mx-3" inset vertical></v-divider>
@@ -38,7 +40,7 @@
         </v-chip>
       </template>
 
-      <template v-slot:item.addContactFace="{ item }">
+      <template v-if="role === 'ADMIN'" v-slot:item.addContactFace="{ item }">
         <v-icon
           @click="startCreateContactFace(item)"
           color="light-blue accent-3"
@@ -54,16 +56,16 @@
         />
       </template>
 
-      <template v-slot:item.deleteContact="{ item }">
+      <template v-if="role === 'ADMIN'" v-slot:item.deleteContact="{ item }">
         <v-icon color="red" @click="deleteContact(item)">person_remove</v-icon>
       </template>
 
-      <template v-slot:item.edit="{ item }">
+      <template v-if="role === 'ADMIN'" v-slot:item.edit="{ item }">
         <v-icon color="green darken-1" @click="startEditClient(item)">
           edit
         </v-icon>
       </template>
-      <template v-slot:item.delete="{ item }">
+      <template v-if="role === 'ADMIN'" v-slot:item.delete="{ item }">
         <v-icon color="red" @click="deleteClient(item)"> delete </v-icon>
       </template>
 
@@ -100,6 +102,7 @@ export default {
     ContactFaceControlModal,
   },
   data: () => ({
+	role: 'ADMIN',
     search: "",
     isCompany: false,
     clientModalMode: "create",
