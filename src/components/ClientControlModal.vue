@@ -56,7 +56,7 @@
 
             <v-flex xs12 sm8 md8>
               <v-text-field
-                v-model="editedClient.address"
+                v-model="editedClient.mailAdress"
                 label="Адрес"
                 color="light-blue accent-3"
               ></v-text-field>
@@ -80,16 +80,8 @@
               ></v-checkbox>
             </v-flex>
 
-            <v-flex xs12 sm12 md12>
-              <v-text-field
-                v-model="editedClient.companyId"
-                :disabled="!isCompany"
-                label="Название компании"
-                color="light-blue accent-3"
-              ></v-text-field>
-            </v-flex>
 
-            <v-flex xs12 sm6 md6>
+            <v-flex xs12 sm12 md12>
               <v-text-field
                 v-model="editedClient.ogrn"
                 :disabled="!isCompany"
@@ -130,8 +122,7 @@ export default {
       city: "",
       inn: "",
       fax: "",
-      address: "",
-      companyId: "",
+      mailAdress: "",
       ogrn: "",
     },
     defaultClient: {
@@ -142,8 +133,7 @@ export default {
       city: "",
       inn: "",
       fax: "",
-      address: "",
-      companyId: "",
+      mailAdress: "",
       ogrn: "",
     },
   }),
