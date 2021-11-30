@@ -130,6 +130,7 @@ import {
 	getAllEmployees,
 	createEmployee,
 	patchEmployeeById,
+	deleteEmployeeById
 } from '@/netClient/employeesService';
 
 export default {
@@ -218,6 +219,16 @@ export default {
 				console.error({ error });
 			}
 		},
+
+		async deleteEmployee() {
+			try {
+				this.employee = await deleteEmployeeById(this.currentEmployeeItem.id);
+				this.refresh()
+			} catch (error) {
+				console.error({ error });
+			}
+		},
+
 		getColor(role) {
 			if (role == 'ADMIN') return 'orange accent-4';
 			else if (role == 'MANAGER') return 'cyan accent-1';
@@ -234,10 +245,7 @@ export default {
 
 		deleteEmployeeItem(item) {
 			this.currentEmployeeItem = item;
-			// const index = this.employees.indexOf(item);
-			// confirm('Are you sure you want to delete this item?') &&
-			// 	this.employees.splice(index, 1);
-      
+			this.deleteEmployee()
 		},
 
 		onModalCloseClicked() {

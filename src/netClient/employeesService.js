@@ -94,15 +94,15 @@ export async function patchEmployeeById(id, name, role, login, password) {
   }
 }
 
-export async function doDeleteEmployeeById() {
+export async function deleteEmployeeById(id) {
   try {
-    const response = await http.delete("/api/employees/:id", {
+    const response = await http.delete("/api/employees/" + id, {
       headers: {
         "Contentt-Type": "application/json",
         "x-access-token": localStorage.accessToken,
       },
     });
-    return response.data ?? [];
+    return response.data ?? {};
   } catch (error) {
     console.error({ error });
     throw error;

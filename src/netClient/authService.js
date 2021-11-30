@@ -38,7 +38,8 @@ export async function doLogin(login, password) {
 export async function doLogout() {
 
     try {
-        const response = await http.post('/api/auth/logout', {
+        const response = await http.post('/api/auth/logout',{}, 
+        {
             headers: {
                 'Contentt-Type': 'application/json',
                 'x-access-token': localStorage.accessToken
