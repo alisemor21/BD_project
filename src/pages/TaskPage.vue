@@ -16,9 +16,14 @@
         <v-dialog v-model="dialog" max-width="500px">
           <template v-slot:activator="{ on }">
             <template v-if="role === 'ADMIN' || role === 'MANAGER'">
-            <v-btn color="light-blue accent-3" dark class="mb-2" v-on="on" @click="startCreateTask"
-              >+ Создать новое задание</v-btn
-            >
+              <v-btn
+                color="light-blue accent-3"
+                dark
+                class="mb-2"
+                v-on="on"
+                @click="startCreateTask"
+                >+ Создать новое задание</v-btn
+              >
             </template>
           </template>
 
@@ -31,17 +36,10 @@
               <v-container grid-list-md>
                 <v-layout wrap>
                   <v-flex xs12 sm6 md6>
-                    <!-- второй вариант отображения автора
-                      <v-select
+                    <v-text-field
+                      v-if="currentUser"
                       v-model="editedItem.author"
-                      :items="[this.currentUser.name]"
-                      label="Автор*"
-                      color="light-blue accent-3"
-                      required
-                    ></v-select> -->
-                    <v-text-field v-if="currentUser"
-                      v-model="editedItem.author"
-                      :disabled = true
+                      :disabled="true"
                       text="this.currentUser.name"
                       label="Автор*"
                       color="light-blue accent-3"
@@ -51,8 +49,13 @@
 
                   <v-flex xs12 sm6 md6>
                     <v-select
+<<<<<<< HEAD
                       v-model="editedItem.executorName"
                       :items="this.employeesNames" 
+=======
+                      v-model="editedItem.executor"
+                      :items="this.employeesNames"
+>>>>>>> c615082a2803f1e79a1e56a4d5d33c8adca29967
                       label="Исполнитель*"
                       color="light-blue accent-3"
                       required
@@ -88,6 +91,7 @@
                       required
                     ></v-text-field>
 
+<<<<<<< HEAD
                   <v-flex xs12 sm12 md12>
                     <v-textarea
                       v-model="editedItem.type"
@@ -100,6 +104,18 @@
                   </v-flex>
 
                   
+=======
+                    <v-flex xs12 sm12 md12>
+                      <v-textarea
+                        v-model="editedItem.type"
+                        background-color="amber lighten-4"
+                        color="orange orange-darken-4"
+                        label="ОписMatveiание задания"
+                        type="type"
+                        required
+                      ></v-textarea>
+                    </v-flex>
+>>>>>>> c615082a2803f1e79a1e56a4d5d33c8adca29967
                   </v-flex>
                 </v-layout>
               </v-container>
@@ -150,18 +166,15 @@ import {
   createTask,
   // patchTaskById,
   // deleteTaskById,
-        } from '@/netClient/taskService'
-import {
-  getAllEmployees,
-  getMyInfo,
-        } from '@/netClient/employeesService'
+} from "@/netClient/taskService";
+import { getAllEmployees, getMyInfo } from "@/netClient/employeesService";
 export default {
   name: "TaskPage",
   data: () => ({
-    role:'MANAGER',
+    role: "MANAGER",
     dialog: false,
     currentUser: [],
-    employees:[],
+    employees: [],
     employeesNames: [],
     expand: [],
     search: "",
@@ -169,7 +182,6 @@ export default {
       {
         text: "Автор задания",
         align: "left",
-        // sortable: false,
         value: "author",
       },
       { text: "Исполнитель", value: "executor" },
@@ -217,39 +229,42 @@ export default {
   },
 
   created() {
-
-		this.refresh();
-	},
+    this.refresh();
+  },
 
   methods: {
-
     refresh() {
       this.getCurrentUserInfo();
-			this.fetchEmployeesList();
-		},
+      this.fetchEmployeesList();
+    },
 
     async fetchEmployeesList() {
       try {
         this.employees = await getAllEmployees();
+<<<<<<< HEAD
       } catch (error){
+=======
+        console.log(this.employees);
+      } catch (error) {
+>>>>>>> c615082a2803f1e79a1e56a4d5d33c8adca29967
         console.error({ error });
       }
     },
 
     getEmployeesNames() {
-      this.employees.forEach(element => {
-        if(element.name != this.currentUser.name){
-          this.employeesNames.push(element.name)
+      this.employees.forEach((element) => {
+        if (element.name != this.currentUser.name) {
+          this.employeesNames.push(element.name);
         }
       });
     },
-    
+
     async getCurrentUserInfo() {
       try {
-        this.currentUser = await getMyInfo()
-        this.editedItem.author = this.currentUser.name
-        this.defaultItem.author = this.currentUser.name
-      } catch (error){
+        this.currentUser = await getMyInfo();
+        this.editedItem.author = this.currentUser.name;
+        this.defaultItem.author = this.currentUser.name;
+      } catch (error) {
         console.error({ error });
       }
     },
