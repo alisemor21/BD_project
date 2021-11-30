@@ -1,64 +1,79 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
+import Vue from "vue";
+import VueRouter from "vue-router";
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
 const routes = [
   {
-    path: '/login',
-    name: 'loginPage',
+    path: "/login",
+    name: "login",
     meta: {
-      title: 'RegistrationPage'
+      title: "Login",
+      layout: "auth-layout",
     },
-    component: () => import('@/pages/RegistrationPage.vue')
+    component: () => import("@/pages/RegistrationPage.vue"),
   },
   {
-    path: '/',
-    name: 'accountPage',
+    path: "/",
+    name: "AccountPage",
     meta: {
-      title: 'AccountPage'
+      title: "Account",
+      layout: "main-layout",
     },
-    component: () => import('@/pages/AccountPage.vue')
+    component: () => import("@/pages/AccountPage.vue"),
   },
-  
+
   {
-    path: '/tasks',
-    name: 'Задания',
+    path: "/tasks",
+    name: "tasks",
     meta: {
-      title: 'Задания'
+      title: "Задания",
+      layout: "main-layout",
     },
-    component: () => import('@/pages/TaskPage.vue')
-  },
-  {
-    path: '/employees',
-    name: 'Сотрудники',
-    meta: {
-      title: 'Сотрудники'
-    },
-    component: () => import('@/pages/EmployeesPage.vue')
+    component: () => import("@/pages/TaskPage.vue"),
   },
   {
-    path: '/clients',
-    name: 'Клиенты',
+    path: "/employees",
+    name: "employeees",
     meta: {
-      title: 'Клиенты'
+      title: "Сотрудники",
+      layout: "main-layout",
     },
-    component: () => import('@/pages/ClientsPage.vue')
+    component: () => import("@/pages/EmployeesPage.vue"),
   },
   {
-    path: '/reports',
-    name: 'Отчёты',
+    path: "/clients",
+    name: "clients",
     meta: {
-      title: 'Отчёты'
+      title: "Клиенты",
+      layout: "main-layout",
     },
-    component: () => import('@/pages/ReportsPage.vue')
-  }
-]
+    component: () => import("@/pages/ClientsPage.vue"),
+  },
+  {
+    path: "/reports",
+    name: "reports",
+    meta: {
+      title: "Отчёты",
+      layout: "main-layout",
+    },
+    component: () => import("@/pages/ReportsPage.vue"),
+  },
+];
 
 const router = new VueRouter({
-  mode: 'history',
+  mode: "history",
   base: process.env.BASE_URL,
-  routes
-})
+  routes,
+});
 
-export default router
+router.beforeEach((to, from, next) => {
+  const { accessToken } = localStorage;
+  if (accessToken || to.name === "login") {
+    next();
+  } else {
+    next("/login");
+  }
+});
+
+export default router;

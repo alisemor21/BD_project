@@ -17,7 +17,7 @@
           <v-spacer></v-spacer>
           <v-dialog v-model="dialog" max-width="500px">
             <template v-slot:activator="{ on }">
-              <v-btn color="light-blue accent-3" dark class="mb-2" v-on="on"
+              <v-btn color="light-blue accent-3" dark class="mb-2" v-on="on" @click="startCreateReport"
                 >+ Создать новый отчёт</v-btn
               >
             </template>
@@ -32,7 +32,7 @@
                     <v-flex xs12 sm12 md12>
                       <v-autocomplete
                         v-model="editedItem.employee"
-                        :items="['Андрей', 'Паша', 'Петя']"
+                        :items="this.employeesNames"
                         label="Работник*"
                         color="light-blue accent-3"
                         required
@@ -67,9 +67,7 @@
                 <v-btn color="light-blue accent-3" @click="close"
                   >Отменить</v-btn
                 >
-                <v-btn color="green accent-2" @click="save"
-                  >Сохранить</v-btn
-                >
+                <v-btn color="green accent-2" @click="save">Сохранить</v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
@@ -85,7 +83,9 @@
             <v-icon class="mr-2" @click="editItem(item)"> edit </v-icon>
           </template> -->
           <template v-slot:item.download="{ item }">
-            <v-icon color="light-blue accent-3" @click="downloadItem(item)"> download </v-icon>
+            <v-icon color="light-blue accent-3" @click="downloadItem(item)">
+              download
+            </v-icon>
           </template>
         </v-data-table>
       </div>
@@ -94,11 +94,14 @@
 </template>
 
 <script>
+import { getAllEmployees } from "@/netClient/employeesService";
 export default {
   name: "EmployeesPage",
   data: () => ({
     dialog: false,
     expand: [],
+    employees:[],
+    employeesNames: [],
     search: "",
     headers: [
       {
@@ -142,7 +145,9 @@ export default {
     },
   },
 
-
+  created() {
+		this.refresh();
+	},
 
   methods: {
     // editItem(item) {
@@ -156,6 +161,30 @@ export default {
     //   confirm("Are you sure you want to delete this item?") &&
     //     this.reports.splice(index, 1);
     // },
+    refresh() {
+			this.fetchEmployeesList();
+		},
+
+    async fetchEmployeesList() {
+      try {
+        this.employees = await getAllEmployees();
+        console.log(this.employees)
+      } catch (error){
+        console.error({ error });
+      }
+    },
+
+    getEmployeesNames() {
+      this.employees.forEach(element => {
+        this.employeesNames.push(element.name)
+      });
+    },
+
+    startCreateReport(){
+      this.fetchEmployeesList()
+      this.getEmployeesNames()
+      console.log(this.employeesNames)
+    },
 
     downloadItem() {
       alert("Скачать отчёт?");
