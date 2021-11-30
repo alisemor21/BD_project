@@ -28,20 +28,21 @@ export default {
       return {
         appTitle: "Awesome App",
         sidebar: false,
-        menuItems: [
-          { title: "Задания", path: "/tasks", icon: "task_alt" },
-          {
-            title: "Сотрудники",
-            path: "/employees",
-            icon: "supervisor_account",
-          },
-          {
-            title: "Клиенты",
-            path: "/clients",
-            icon: "settings_accessibility",
-          },
-          { title: "Отчёты", path: "/reports", icon: "summarize" },
-        ],
+        // menuItems: [
+        //   { title: "Задания", path: "/tasks", icon: "task_alt" },
+        //   {
+        //     title: "Сотрудники",
+        //     path: "/employees",
+        //     icon: "supervisor_account",
+        //   },
+        //   {
+        //     title: "Клиенты",
+        //     path: "/clients",
+        //     icon: "settings_accessibility",
+        //   },
+        //   { title: "Отчёты", path: "/reports", icon: "summarize" },
+        //   { title: "Контракты", path: "/contracts", icon: "description" },
+        // ],
       };
     },
   },

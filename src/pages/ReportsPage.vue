@@ -79,9 +79,7 @@
           item-key="name"
           class="elevation-1"
         >
-          <!-- <template v-slot:item.edit="{ item }">
-            <v-icon class="mr-2" @click="editItem(item)"> edit </v-icon>
-          </template> -->
+
           <template v-slot:item.download="{ item }">
             <v-icon color="light-blue accent-3" @click="downloadItem(item)">
               download

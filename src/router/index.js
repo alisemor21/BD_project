@@ -59,6 +59,15 @@ const routes = [
     },
     component: () => import("@/pages/ReportsPage.vue"),
   },
+  {
+    path: "/contracts",
+    name: "contracts",
+    meta: {
+      title: "Контракты",
+      layout: "main-layout",
+    },
+    component: () => import("@/pages/ContractsPage.vue"),
+  }
 ];
 
 const router = new VueRouter({

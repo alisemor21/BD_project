@@ -28,6 +28,8 @@ export default {
 				{ title: 'Сотрудники', path: '/employees',icon: 'supervisor_account', backgroundcolor:'amber lighten-3'},
 				{ title: 'Клиенты', path: '/clients', icon: 'settings_accessibility', backgroundcolor:'amber lighten-3'},
 				{ title: 'Отчёты', path: '/reports', icon: 'summarize',backgroundcolor:'amber lighten-3'},
+				{ title: "Контракты", path: "/contracts", icon: "description",backgroundcolor:'amber lighten-3' },
+
 			],
 		};
 	},
