@@ -179,9 +179,11 @@ export default {
 			return this.editedIndex === -1 ? 'Создать' : 'Редактировать';
 		},
 	},
+
 	created() {
 		this.refresh();
 	},
+	
 	methods: {
 		refresh() {
 			this.fetchEmployeesList();

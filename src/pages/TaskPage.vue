@@ -31,13 +31,22 @@
               <v-container grid-list-md>
                 <v-layout wrap>
                   <v-flex xs12 sm6 md6>
-                    <v-select
+                    <!-- второй вариант отображения автора
+                      <v-select
                       v-model="editedItem.author"
-                      :items="['User']"
+                      :items="[this.currentUser.name]"
                       label="Автор*"
                       color="light-blue accent-3"
                       required
-                    ></v-select>
+                    ></v-select> -->
+                    <v-text-field v-if="currentUser"
+                      v-model="editedItem.author"
+                      :disabled = true
+                      text="this.currentUser.name"
+                      label="Автор*"
+                      color="light-blue accent-3"
+                      required
+                    ></v-text-field>
                   </v-flex>
 
                   <v-flex xs12 sm6 md6>
@@ -84,7 +93,7 @@
                       v-model="editedItem.type"
                       background-color="amber lighten-4"
                       color="orange orange-darken-4"
-                      label="Описание задания"
+                      label="ОписMatveiание задания"
                       type="type"
                       required
                     ></v-textarea>
@@ -138,19 +147,20 @@
 import {
   // getAllTasks,
   // getTaskById,
-  // createTask,
+  createTask,
   // patchTaskById,
   // deleteTaskById,
         } from '@/netClient/taskService'
-  import {
-    getAllEmployees
-  } from '@/netClient/employeesService'
+import {
+  getAllEmployees,
+  getMyInfo,
+        } from '@/netClient/employeesService'
 export default {
   name: "TaskPage",
   data: () => ({
     role:'MANAGER',
     dialog: false,
-    author: [],
+    currentUser: [],
     employees:[],
     employeesNames: [],
     expand: [],
@@ -172,9 +182,10 @@ export default {
       { text: "", value: "delete", sortable: false },
     ],
     tasks: [],
+    //editItemName: this.currentUser.name,
     editedIndex: -1,
     editedItem: {
-      author: "User",
+      author: "",
       executor: "",
       priority: "LOW",
       status: "ACTIVE",
@@ -182,7 +193,7 @@ export default {
       deadline: "",
     },
     defaultItem: {
-      author: "User",
+      author: "",
       executor: "",
       priority: "LOW",
       status: "ACTIVE",
@@ -204,12 +215,14 @@ export default {
   },
 
   created() {
+
 		this.refresh();
 	},
 
   methods: {
 
     refresh() {
+      this.getCurrentUserInfo();
 			this.fetchEmployeesList();
 		},
 
@@ -224,14 +237,41 @@ export default {
 
     getEmployeesNames() {
       this.employees.forEach(element => {
-        this.employeesNames.push(element.name)
+        if(element.name != this.currentUser.name){
+          this.employeesNames.push(element.name)
+        }
       });
+    },
+    
+    async getCurrentUserInfo() {
+      try {
+        this.currentUser = await getMyInfo()
+        this.editedItem.author = this.currentUser.name
+        this.defaultItem.author = this.currentUser.name
+      } catch (error){
+        console.error({ error });
+      }
     },
 
     startCreateTask(){
       this.fetchEmployeesList()
       this.getEmployeesNames()
       console.log(this.employeesNames)
+    },
+
+    async submitCreateTask(){
+      try {
+        await createTask(
+            this.currentUser.name,
+            this.editedItem.executor,
+            this.editedItem.priority,
+            this.editedItem.status,
+            this.editedItem.type,
+            this.deadline.deadline
+        )
+      } catch (error){
+        console.error({ error });
+      }
     },
 
     getColorStatus(status) {
