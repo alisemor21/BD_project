@@ -59,7 +59,7 @@ export async function getAllTasks() {
     }
   }
   
-  export async function patchTaskById(author, executor, priority, status, type, deadline) {
+  export async function patchTaskById(id, author, executor, priority, status, type, deadline) {
     try {
       const response = await http.patch(
         "/api/tasks/" + id,

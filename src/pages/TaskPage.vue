@@ -16,7 +16,7 @@
         <v-dialog v-model="dialog" max-width="500px">
           <template v-slot:activator="{ on }">
             <template v-if="role === 'ADMIN' || role === 'MANAGER'">
-            <v-btn color="light-blue accent-3" dark class="mb-2" v-on="on"
+            <v-btn color="light-blue accent-3" dark class="mb-2" v-on="on" @click="startCreateTask"
               >+ Создать новое задание</v-btn
             >
             </template>
@@ -43,7 +43,7 @@
                   <v-flex xs12 sm6 md6>
                     <v-select
                       v-model="editedItem.executor"
-                      :items="['Employee']"
+                      :items="this.employeesNames" 
                       label="Исполнитель*"
                       color="light-blue accent-3"
                       required
@@ -135,12 +135,23 @@
 </template>
 
 <script>
+import {
+  // getAllTasks,
+  // getTaskById,
+  // createTask,
+  // patchTaskById,
+  // deleteTaskById,
+        } from '@/netClient/taskService'
+  import {
+    getAllEmployees
+  } from '@/netClient/employeesService'
 export default {
   name: "TaskPage",
   data: () => ({
     role:'MANAGER',
     dialog: false,
     employees:[],
+    employeesNames: [],
     expand: [],
     search: "",
     headers: [
@@ -192,6 +203,26 @@ export default {
   },
 
   methods: {
+    async fetchEmployeesList() {
+      try {
+        this.employees = await getAllEmployees();
+        console.log(this.employees)
+      } catch (error){
+        console.error({ error });
+      }
+    },
+
+    startCreateTask(){
+      this.fetchEmployeesList()
+      this.getEmployeesNames()
+      console.log(this.employeesNames)
+    },
+
+    getEmployeesNames() {
+      this.employees.forEach(element => {
+        this.employeesNames.push(element.name)
+      });
+    },
 
     getColorStatus(status) {
       if (status == "READY") return "light-green lighten-2";
