@@ -51,7 +51,7 @@
 
                   <v-flex xs12 sm6 md6>
                     <v-select
-                      v-model="editedItem.executor"
+                      v-model="editedItem.executorName"
                       :items="this.employeesNames" 
                       label="Исполнитель*"
                       color="light-blue accent-3"
@@ -93,7 +93,7 @@
                       v-model="editedItem.type"
                       background-color="amber lighten-4"
                       color="orange orange-darken-4"
-                      label="ОписMatveiание задания"
+                      label="Описание задания"
                       type="type"
                       required
                     ></v-textarea>
@@ -108,7 +108,7 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="light-blue accent-3" @click="close">Отменить</v-btn>
-              <v-btn color="green accent-2" @click="save">Сохранить</v-btn>
+              <v-btn color="green accent-2" @click="submitCreateTask">Сохранить</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -186,7 +186,8 @@ export default {
     editedIndex: -1,
     editedItem: {
       author: "",
-      executor: "",
+      executorName: "",
+      executorId: "",
       priority: "LOW",
       status: "ACTIVE",
       type: "",
@@ -194,7 +195,8 @@ export default {
     },
     defaultItem: {
       author: "",
-      executor: "",
+      executorName: "",
+      executorId: "",
       priority: "LOW",
       status: "ACTIVE",
       type: "",
@@ -229,7 +231,6 @@ export default {
     async fetchEmployeesList() {
       try {
         this.employees = await getAllEmployees();
-        console.log(this.employees)
       } catch (error){
         console.error({ error });
       }
@@ -256,22 +257,31 @@ export default {
     startCreateTask(){
       this.fetchEmployeesList()
       this.getEmployeesNames()
-      console.log(this.employeesNames)
     },
 
     async submitCreateTask(){
-      try {
+      console.log(this.editedItem)
+      
+      this.employees.forEach(element => {
+        if(element.name == this.editedItem.executorName){
+          this.editedItem.executorId = element.id
+        }
+      })
+      if(this.editedItem.executorId){
+        try {
         await createTask(
-            this.currentUser.name,
-            this.editedItem.executor,
+            this.currentUser.id,
+            this.editedItem.executorId,
             this.editedItem.priority,
             this.editedItem.status,
             this.editedItem.type,
-            this.deadline.deadline
+            this.editedItem.deadline
         )
       } catch (error){
         console.error({ error });
       }
+      }
+      
     },
 
     getColorStatus(status) {
