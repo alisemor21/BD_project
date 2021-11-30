@@ -17,7 +17,7 @@
                 required
               ></v-select>
             </v-flex>
-            <v-flex xs12 sm4 md4>
+            <v-flex xs12 sm8 md8>
               <v-text-field
                 v-model="editedClient.inn"
                 label="ИНН"
@@ -34,8 +34,7 @@
             <v-flex xs12 sm12 md12>
               <v-text-field
                 v-model="editedClient.name"
-                label="ФИО"
-                hint="фамилия имя отчество через пробел"
+                label="ФИО / Название компании"
                 color="light-blue accent-3"
               ></v-text-field>
             </v-flex>
