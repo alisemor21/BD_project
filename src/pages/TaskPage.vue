@@ -150,6 +150,7 @@ export default {
   data: () => ({
     role:'MANAGER',
     dialog: false,
+    author: [],
     employees:[],
     employeesNames: [],
     expand: [],
@@ -202,7 +203,16 @@ export default {
     },
   },
 
+  created() {
+		this.refresh();
+	},
+
   methods: {
+
+    refresh() {
+			this.fetchEmployeesList();
+		},
+
     async fetchEmployeesList() {
       try {
         this.employees = await getAllEmployees();
@@ -212,16 +222,16 @@ export default {
       }
     },
 
-    startCreateTask(){
-      this.fetchEmployeesList()
-      this.getEmployeesNames()
-      console.log(this.employeesNames)
-    },
-
     getEmployeesNames() {
       this.employees.forEach(element => {
         this.employeesNames.push(element.name)
       });
+    },
+
+    startCreateTask(){
+      this.fetchEmployeesList()
+      this.getEmployeesNames()
+      console.log(this.employeesNames)
     },
 
     getColorStatus(status) {
