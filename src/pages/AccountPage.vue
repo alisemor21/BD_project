@@ -19,6 +19,7 @@
   </div>
 </template>
 <script>
+import { doLogout } from "@/netClient/authService";
 import { getMyInfo } from "@/netClient/employeesService";
 export default {
   name: "AccountPage",
@@ -37,7 +38,12 @@ export default {
       }
     },
     async onLogoutClicked() {
-      this.$router.push("/login");
+       try {
+        await doLogout();
+        this.$router.push("/login");
+      } catch (error) {
+        console.error({ error });
+      }
     },
     
   },

@@ -140,6 +140,7 @@ export default {
   data: () => ({
     role:'MANAGER',
     dialog: false,
+    employees:[],
     expand: [],
     search: "",
     headers: [
