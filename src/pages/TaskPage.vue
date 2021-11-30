@@ -49,13 +49,8 @@
 
                   <v-flex xs12 sm6 md6>
                     <v-select
-<<<<<<< HEAD
-                      v-model="editedItem.executorName"
-                      :items="this.employeesNames" 
-=======
                       v-model="editedItem.executor"
                       :items="this.employeesNames"
->>>>>>> c615082a2803f1e79a1e56a4d5d33c8adca29967
                       label="Исполнитель*"
                       color="light-blue accent-3"
                       required
@@ -91,31 +86,16 @@
                       required
                     ></v-text-field>
 
-<<<<<<< HEAD
-                  <v-flex xs12 sm12 md12>
-                    <v-textarea
-                      v-model="editedItem.type"
-                      background-color="amber lighten-4"
-                      color="orange orange-darken-4"
-                      label="Описание задания"
-                      type="type"
-                      required
-                    ></v-textarea>
-                  </v-flex>
-
-                  
-=======
                     <v-flex xs12 sm12 md12>
                       <v-textarea
                         v-model="editedItem.type"
                         background-color="amber lighten-4"
                         color="orange orange-darken-4"
-                        label="ОписMatveiание задания"
+                        label="Описание задания"
                         type="type"
                         required
                       ></v-textarea>
                     </v-flex>
->>>>>>> c615082a2803f1e79a1e56a4d5d33c8adca29967
                   </v-flex>
                 </v-layout>
               </v-container>
@@ -241,12 +221,8 @@ export default {
     async fetchEmployeesList() {
       try {
         this.employees = await getAllEmployees();
-<<<<<<< HEAD
-      } catch (error){
-=======
         console.log(this.employees);
       } catch (error) {
->>>>>>> c615082a2803f1e79a1e56a4d5d33c8adca29967
         console.error({ error });
       }
     },
