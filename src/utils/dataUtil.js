@@ -1,9 +1,8 @@
 const prepareFormData = (form) => {
     const pureForm = {}
     Object.entries(form).forEach(([key, value]) => {
-        console.warn({ value });
-        if (typeof value !== 'object' && typeof value !== 'array' && value && value?.trim()) {
-            pureForm[key] = value.trim()
+        if (value?.length && value?.trim()) {
+            pureForm[key] = value;
         }
     })
     return pureForm
