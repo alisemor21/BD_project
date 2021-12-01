@@ -35,8 +35,6 @@
             <v-card-text>
               <v-container grid-list-md>
                 <v-layout wrap>
-                  <!-- По аналогии с работниками в тасках достать клиентов в ALL CLIENTS -->
-
                   <v-flex xs12 sm12 md12>
                     <v-select
                       v-model="editedItem.clientName"
@@ -95,7 +93,7 @@ import {
   createContract,
   deleteContractById,
    } from "@/netClient/contractService";
-import { fetchClientList } from "@/netClient/clientService";
+import { fetchClientList, fetchClientById } from "@/netClient/clientService";
 
 export default {
   name: "ContractsPage",
@@ -104,13 +102,14 @@ export default {
     dialog: false,
     currentUser: [],
     currentContract: [],
+    client:null,
     clients: [],
     clientNameList: [],
     expand: [],
     search: "",
     headers: [
       { text: "id контракт", value: "id" },
-      { text: "Клиент", value: "clientId" },
+      { text: "Клиент", value: "client" },
       { text: "Информация по контракту", value: "info" },
 
       { text: "", value: "edit", sortable: false },
@@ -155,6 +154,14 @@ export default {
     async fetchAllContracts() {
       try {
         this.contracts = await getAllContracts();
+      } catch (error) {
+        console.error({ error });
+      }
+    },
+
+    async fetchClientById(){
+      try {
+        this.client = await fetchClientById();
       } catch (error) {
         console.error({ error });
       }

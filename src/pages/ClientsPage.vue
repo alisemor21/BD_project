@@ -1,248 +1,270 @@
 <template>
-	<div>
-		<template v-if="role === 'ADMIN'">
-			<v-btn
-				@click="startCreateClient"
-				color="light-blue accent-3"
-				dark
-				class="mb-4"
-			>
-				+ Новый клиент
-			</v-btn>
-		</template>
-		<v-toolbar color="white">
-			<v-toolbar-title>Все клиенты</v-toolbar-title>
-			<v-divider class="mx-3" inset vertical></v-divider>
-			<v-spacer></v-spacer>
-			<v-text-field
-				v-model="search"
-				append-icon="mdi-magnify"
-				label="Search"
-				single-line
-				color="light-blue accent-3"
-				hide-details
-			></v-text-field>
-			<v-spacer></v-spacer>
-		</v-toolbar>
-		<v-data-table
-			:headers="headers"
-			:items="clientsList"
-			:search="search"
-			item-key="id"
-			class="elevation-1"
-			:expanded.sync="expanded"
-			show-expand
-		>
-			<template v-slot:item.status="{ item }" dark>
-				<v-chip :color="getStatusCellColor(item.status)">
-					{{ item.status | getStatusCellLabel }}
-				</v-chip>
-			</template>
+  <div>
+    <template v-if="role === 'ADMIN'">
+      <v-btn
+        @click="startCreateClient"
+        color="light-blue accent-3"
+        dark
+        class="mb-4"
+      >
+        + Новый клиент
+      </v-btn>
+    </template>
+    <v-toolbar color="white">
+      <v-toolbar-title>Все клиенты</v-toolbar-title>
+      <v-divider class="mx-3" inset vertical></v-divider>
+      <v-spacer></v-spacer>
+      <v-text-field
+        v-model="search"
+        append-icon="mdi-magnify"
+        label="Search"
+        single-line
+        color="light-blue accent-3"
+        hide-details
+      ></v-text-field>
+      <v-spacer></v-spacer>
+    </v-toolbar>
+    <v-data-table
+      :headers="headers"
+      :items="clientsList"
+      :search="search"
+      item-key="id"
+      class="elevation-1"
+      :expanded.sync="expanded"
+      show-expand
+    >
+      <template v-slot:item.status="{ item }" dark>
+        <v-chip :color="getStatusCellColor(item.status)">
+          {{ item.status | getStatusCellLabel }}
+        </v-chip>
+      </template>
 
-			<template
-				v-if="role === 'ADMIN'"
-				v-slot:item.addContactFace="{ item }"
-			>
-				<v-icon
-					@click="startCreateContactFace(item)"
-					color="light-blue accent-3"
-					dark
-				>
-					person_add_alt
-				</v-icon>
-				<ContactFaceControlModal
-					v-if="contactFacesModalVisible"
-					ref="сontactFaceControlModal"
-					:currentContactFace.sync="currentContactFace"
-					@done="onContactFacesModalDone"
-				/>
-			</template>
-			<template v-if="role === 'ADMIN'" v-slot:item.editClient="{ item }">
-				<v-icon  v-if="item.status !== 'INACTIVE'" color="green darken-1" @click="startEditClient(item)">
-					edit
-				</v-icon>
-			</template>
-			<template
-				v-if="role === 'ADMIN'"
-				v-slot:item.deleteClient="{ item }"
-			>
-				<v-icon v-if="item.status !== 'INACTIVE'" color="red" @click="deleteClient(item)">
-					delete
-				</v-icon>
-			</template>
+      <template v-if="role === 'ADMIN'" v-slot:item.addContactFace="{ item }">
+        <v-icon
+          @click="startCreateContactFace(item)"
+          color="light-blue accent-3"
+          dark
+        >
+          person_add_alt
+        </v-icon>
+        <ContactFaceControlModal
+          v-if="contactFacesModalVisible"
+          ref="сontactFaceControlModal"
+          :currentContactFace.sync="currentContactFace"
+          @done="onContactFacesModalDone"
+        />
+      </template>
+      <template v-if="role === 'ADMIN'" v-slot:item.editClient="{ item }">
+        <v-icon
+          v-if="item.status !== 'INACTIVE'"
+          color="green darken-1"
+          @click="startEditClient(item)"
+        >
+          edit
+        </v-icon>
+      </template>
+      <template v-if="role === 'ADMIN'" v-slot:item.deleteClient="{ item }">
+        <v-icon
+          v-if="item.status !== 'INACTIVE'"
+          color="red"
+          @click="deleteClient(item)">
+          delete
+        </v-icon>
+      </template>
 
-			<template v-slot:expanded-item="{ headers, item }">
-				<td :colspan="headers.length">
-					<ul>
-						<li
-							v-for="contactFace in item.contactFaceList"
-							:key="contactFace.id"
-						>
-							<div>
-								{{ contactFace.name }} {{ contactFace.phone }}
-								{{ contactFace.email }} {{contactFace.contactFaceStatus}}
-							</div>
-							<div v-if="role === 'ADMIN' && contactFace.contactFaceStatus ==='ACTIVE'">
-								<v-icon
-									color="red"
-									@click="deleteContact(item.id, contactFace.id)"
-								>
-									person_remove
-								</v-icon>
-							</div>
-						</li>
-					</ul>
-				</td>
-			</template>
-		</v-data-table>
-		<ClientControlModal
-			v-if="clientModalVisible"
-			ref="clientControlModal"
-			@success="onClientModalSuccess"
-			@close="onClientModalClose"
-		/>
-	</div>
+      <template v-slot:expanded-item="{ headers, item }">
+        <td :colspan="headers.length">
+          <ul>
+            <li
+              v-for="contactFace in item.contactFaceList"
+              :key="contactFace.id">
+              <div>
+                {{ contactFace.name }} {{ contactFace.phone }}
+                {{ contactFace.email }} {{ contactFace.contactFaceStatus }}
+              </div>
+              <div
+                v-if="
+                  role === 'ADMIN' && contactFace.contactFaceStatus === 'ACTIVE'">
+                <v-dialog v-model="dialog" persistent max-width="4000">
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-icon dark v-bind="attrs" v-on="on" color="red">
+                      person_remove
+                    </v-icon>
+                  </template>
+                  <v-card>
+                    <v-card-title class="text-h5">
+                      Вы уверены, что хотите удалить это контактное лицо?
+                    </v-card-title>
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn
+                        color="green darken-1"
+                        text
+                        @click="dialog = false">
+                        Отменить
+                      </v-btn>
+                      <v-btn
+                        color="red"
+                        text
+                        @click="deleteContact(item.id, contactFace.id)">
+                        Удалить
+                      </v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
+              </div>
+            </li>
+          </ul>
+        </td>
+      </template>
+    </v-data-table>
+    <ClientControlModal
+      v-if="clientModalVisible"
+      ref="clientControlModal"
+      @success="onClientModalSuccess"
+      @close="onClientModalClose"
+    />
+  </div>
 </template>
 
 <script>
-import ClientControlModal from '@/components/ClientControlModal';
-import ContactFaceControlModal from '@/components/ContactFaceControlModal';
-import { deleteClientById, fetchClientList, deleteContactFaceById } from '@/netClient/clientService';
-import { getCLientEnumColor, getEnumLabel } from '@/utils/enumUtil';
+import ClientControlModal from "@/components/ClientControlModal";
+import ContactFaceControlModal from "@/components/ContactFaceControlModal";
+import {
+  deleteClientById,
+  fetchClientList,
+  deleteContactFaceById,
+} from "@/netClient/clientService";
+import { getCLientEnumColor, getEnumLabel } from "@/utils/enumUtil";
 
 export default {
-	name: 'ClientsPage',
-	filters: {
-		getStatusCellLabel: (statusCode) => {
-			return getEnumLabel(statusCode);
-		},
-	},
-	components: {
-		ClientControlModal,
-		ContactFaceControlModal,
-	},
-	data: () => ({
-		role: 'ADMIN',
-		search: '',
-		isCompany: false,
-		clientModalMode: 'create',
-		contactFacesModalMode: 'create',
-		clientModalVisible: false,
-		contactFacesModalVisible: false,
-		expanded: [],
-		headers: [
-			{ text: 'Cтатус', value: 'status' },
-			{ text: 'Имя', value: 'name', align: 'left' },
-			{ text: 'ИНН', value: 'inn', sortable: false },
-			// { text: 'Email', value: 'email', sortable: false },
-			// { text: 'Телефон', value: 'phone', sortable: false },
-			// { text: 'Город', value: 'city', sortable: false },
-			// { text: 'fax', value: 'fax', sortable: false },
-			// { text: 'Адрес', value: 'mailAdress', sortable: false },
-			// { text: 'ОГРН', value: 'ogrn', sortable: false },
-			{ text: '', value: 'addContactFace', sortable: false },
-			{ text: '', value: 'editClient', sortable: false },
-			{ text: '', value: 'deleteClient', sortable: false },
-		],
-		clientsList: [],
-		contactFacesList: [],
-		currentClient: null,
-		currentContactFace: null,
-	}),
-	created() {
-		this.fetchClients();
-	},
-	methods: {
-		async fetchClients() {
-			try {
-				this.clientsList = await fetchClientList();
-			} catch (error) {
-				console.error({ error });
-			}
-		},
-		async deleteClientById(id) {
-			try {
-				await deleteClientById(id);
-			} catch (error) {
-				console.error({ error });
-			}
-		},
-		async deleteClient(item) {
-			console.warn({ item });
-			if (confirm('Удалить клиента?')) {
-				await this.deleteClientById(item.id);
-				this.fetchClients();
-			}
-		},
-		startCreateClient() {
-			this.clientModalVisible = true;
-			this.$nextTick(() => {
-				this.$refs.clientControlModal.openModal();
-			});
-		},
+  name: "ClientsPage",
+  filters: {
+    getStatusCellLabel: (statusCode) => {
+      return getEnumLabel(statusCode);
+    },
+  },
+  components: {
+    ClientControlModal,
+    ContactFaceControlModal,
+  },
+  data: () => ({
+    role: "ADMIN",
+    dialog: false,
+    search: "",
+    isCompany: false,
+    clientModalMode: "create",
+    contactFacesModalMode: "create",
+    clientModalVisible: false,
+    contactFacesModalVisible: false,
+    expanded: [],
+    headers: [
+      { text: "Cтатус", value: "status" },
+      { text: "Имя", value: "name", align: "left" },
+      { text: "ИНН", value: "inn", sortable: false },
+      // { text: 'Email', value: 'email', sortable: false },
+      // { text: 'Телефон', value: 'phone', sortable: false },
+      // { text: 'Город', value: 'city', sortable: false },
+      // { text: 'fax', value: 'fax', sortable: false },
+      // { text: 'Адрес', value: 'mailAdress', sortable: false },
+      // { text: 'ОГРН', value: 'ogrn', sortable: false },
+      { text: "", value: "addContactFace", sortable: false },
+      { text: "", value: "editClient", sortable: false },
+      { text: "", value: "deleteClient", sortable: false },
+    ],
+    clientsList: [],
+    contactFacesList: [],
+    currentClient: null,
+    currentContactFace: null,
+  }),
+  created() {
+    this.fetchClients();
+  },
+  methods: {
+    async fetchClients() {
+      try {
+        this.clientsList = await fetchClientList();
+      } catch (error) {
+        console.error({ error });
+      }
+    },
+    async deleteClientById(id) {
+      try {
+        await deleteClientById(id);
+      } catch (error) {
+        console.error({ error });
+      }
+    },
+    async deleteClient(item) {
+      console.warn({ item });
+      if (confirm("Удалить клиента?")) {
+        await this.deleteClientById(item.id);
+        this.fetchClients();
+      }
+    },
+    startCreateClient() {
+      this.clientModalVisible = true;
+      this.$nextTick(() => {
+        this.$refs.clientControlModal.openModal();
+      });
+    },
 
-		startEditClient(client) {
-			this.clientModalVisible = true;
-			this.$nextTick(() => {
-				this.$refs.clientControlModal.openModal(client.id);
-			});
-		},
+    startEditClient(client) {
+      this.clientModalVisible = true;
+      this.$nextTick(() => {
+        this.$refs.clientControlModal.openModal(client.id);
+      });
+    },
 
-		onClientModalSuccess() {
-			this.clientModalVisible = false;
-			this.fetchClients();
-		},
+    onClientModalSuccess() {
+      this.clientModalVisible = false;
+      this.fetchClients();
+    },
 
-		onClientModalClose() {
-			this.clientModalVisible = false;
-		},
+    onClientModalClose() {
+      this.clientModalVisible = false;
+    },
 
-		startCreateContactFace(client) {
-			this.contactFacesModalVisible = true;
-			this.currentClient = client;
-			this.$nextTick(() => {
-				this.$refs.сontactFaceControlModal.openContactFaceModal(client.id);
-			});
-		},
+    startCreateContactFace(client) {
+      this.contactFacesModalVisible = true;
+      this.currentClient = client;
+      this.$nextTick(() => {
+        this.$refs.сontactFaceControlModal.openContactFaceModal(client.id);
+      });
+    },
 
-		onContactFacesModalDone(contactFace) {
-			if (contactFace) {
-				const tableClientIndex = this.clientsList.findIndex(
-					({ id }) => this.currentClient.id === id,
-				);
-				const { contactFaces } =
-					this.clientsList[tableClientIndex] ?? {};
-				if (!contactFaces) {
-					this.clientsList[tableClientIndex].contactFaces = [];
-				}
-				const index = contactFaces.findIndex(
-					({ id }) => contactFace.id === id,
-				);
-				if (index > -1) {
-					this.clientsList[tableClientIndex].contactFaces[index] =
-						contactFace;
-				} else {
-					this.clientsList[tableClientIndex].contactFaces =
-						contactFaces.concat(contactFace);
-				}
-			}
+    onContactFacesModalDone(contactFace) {
+      if (contactFace) {
+        const tableClientIndex = this.clientsList.findIndex(
+          ({ id }) => this.currentClient.id === id
+        );
+        const { contactFaces } = this.clientsList[tableClientIndex] ?? {};
+        if (!contactFaces) {
+          this.clientsList[tableClientIndex].contactFaces = [];
+        }
+        const index = contactFaces.findIndex(({ id }) => contactFace.id === id);
+        if (index > -1) {
+          this.clientsList[tableClientIndex].contactFaces[index] = contactFace;
+        } else {
+          this.clientsList[tableClientIndex].contactFaces =
+            contactFaces.concat(contactFace);
+        }
+      }
 
-			this.currentClient = null;
-			this.currentContactFace = null;
-			this.contactFacesModalVisible = false;
-			this.fetchClients();
-		},
+      this.currentClient = null;
+      this.currentContactFace = null;
+      this.contactFacesModalVisible = false;
+      this.fetchClients();
+    },
 
-		getStatusCellColor(statusCode) {
-			return getCLientEnumColor(statusCode);
-		},
-		async deleteContact(clientId, contactFaceId) {
-			console.warn({ clientId, contactFaceId });
-			if (confirm('Удалить контактное лицо?')) {
-				await deleteContactFaceById(clientId, contactFaceId);
-			}
-			await this.fetchClients();
-		},
-	},
+    getStatusCellColor(statusCode) {
+      return getCLientEnumColor(statusCode);
+    },
+    async deleteContact(clientId, contactFaceId) {
+      console.warn({ clientId, contactFaceId });
+      await deleteContactFaceById(clientId, contactFaceId);
+      await this.fetchClients();
+    },
+  },
 };
 </script>

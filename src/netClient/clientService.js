@@ -48,7 +48,7 @@ export async function deleteClientById(id) {
 
 export async function fetchClientById(id) {
     try {
-        const response = await http.get("/api/clients/" + id);    //ненужно
+        const response = await http.get("/api/clients/" + id);    
         return covertClient(response.data);
     } catch (error) {
         console.error({ error });
