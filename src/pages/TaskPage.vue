@@ -85,17 +85,39 @@
                       color="light-blue accent-3"
                       required
                     ></v-text-field>
+                  </v-flex>
 
-                    <v-flex xs12 sm12 md12>
-                      <v-textarea
-                        v-model="editedItem.type"
-                        background-color="amber lighten-4"
-                        color="orange orange-darken-4"
-                        label="Описание задания"
-                        type="type"
-                        required
-                      ></v-textarea>
-                    </v-flex>
+                  <v-flex xs12 sm6 md6>
+                    <v-select
+                      v-model="editedItem.contractId"
+                      :items="this.contractsId"
+                      label="Контракт*"
+                      color="light-blue accent-3"
+                      required
+                    ></v-select>
+                  </v-flex>
+
+                  <v-flex xs12 sm6 md6>
+                    <v-select
+                      v-model="editedItem.contactFaceId"
+                      :items="this.contactFacesNames"
+                      label="Контактное лицо*"
+                      color="light-blue accent-3"
+                      required
+                    ></v-select>
+                  </v-flex>
+
+               
+
+                  <v-flex xs12 sm12 md12>
+                    <v-textarea
+                      v-model="editedItem.type"
+                      background-color="amber lighten-4"
+                      color="orange orange-darken-4"
+                      label="Описание задания"
+                      type="type"
+                      required
+                    ></v-textarea>
                   </v-flex>
                 </v-layout>
               </v-container>
@@ -104,7 +126,9 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="light-blue accent-3" @click="close">Отменить</v-btn>
-              <v-btn color="green accent-2" @click="submitCreateTask">Сохранить</v-btn>
+              <v-btn color="green accent-2" @click="submitCreateTask"
+                >Сохранить</v-btn
+              >
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -169,6 +193,9 @@ export default {
       { text: "Статус", value: "status" },
       { text: "Описание", value: "type" },
       { text: "Дедлайн", value: "deadline" },
+      { text: "Контактное лицо", value: "contactFaceId" },
+      { text: "Контракт", value: "contractId" },
+      
 
       { text: "", value: "edit", sortable: false },
       { text: "", value: "delete", sortable: false },
@@ -245,34 +272,33 @@ export default {
       }
     },
 
-    startCreateTask(){
-      this.fetchEmployeesList()
-      this.getEmployeesNames()
+    startCreateTask() {
+      this.fetchEmployeesList();
+      this.getEmployeesNames();
     },
 
-    async submitCreateTask(){
-      console.log(this.editedItem)
-      
-      this.employees.forEach(element => {
-        if(element.name == this.editedItem.executorName){
-          this.editedItem.executorId = element.id
+    async submitCreateTask() {
+      console.log(this.editedItem);
+
+      this.employees.forEach((element) => {
+        if (element.name == this.editedItem.executorName) {
+          this.editedItem.executorId = element.id;
         }
-      })
-      if(this.editedItem.executorId){
+      });
+      if (this.editedItem.executorId) {
         try {
-        await createTask(
+          await createTask(
             this.currentUser.id,
             this.editedItem.executorId,
             this.editedItem.priority,
             this.editedItem.status,
             this.editedItem.type,
             this.editedItem.deadline
-        )
-      } catch (error){
-        console.error({ error });
+          );
+        } catch (error) {
+          console.error({ error });
+        }
       }
-      }
-      
     },
 
     getColorStatus(status) {
