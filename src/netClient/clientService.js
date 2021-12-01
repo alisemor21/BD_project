@@ -67,10 +67,12 @@ export async function fetchClientById(id) {
 // }
 
 
-export async function createContactFace(name, phone, email,id) {
+export async function createContactFace(id, name, phone, email) {
     try {
       const response = await http.post("/api/clients/"+id+ "/contact-faces", {
-        name, phone, email
+        name, 
+        phone, 
+        email
       });
       return response.data ?? [];
     } catch (error) {

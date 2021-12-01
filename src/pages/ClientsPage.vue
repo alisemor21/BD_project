@@ -196,11 +196,11 @@ export default {
 			this.clientModalVisible = false;
 		},
 
-		startCreateContactFace(item) {
+		startCreateContactFace(client) {
 			this.contactFacesModalVisible = true;
-			this.currentClient = item;
+			this.currentClient = client;
 			this.$nextTick(() => {
-				this.$refs.сontactFaceControlModal.openContactFaceModal();
+				this.$refs.сontactFaceControlModal.openContactFaceModal(client.id);
 			});
 		},
 
