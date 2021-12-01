@@ -73,6 +73,7 @@ export async function fetchContactFaceById(id) {
         //   id,
         // }
       });
+      console.log('22222222', response.data.contactFacesList)
       return response.data.contactFacesList ?? [];
     } catch (error) {
       console.error({ error });
@@ -95,9 +96,9 @@ export async function createContactFace(id, name, phone, email) {
     }
   }
   
-  export async function deleteContactFaceById(id, index) {
+  export async function deleteContactFaceById(clientId, contactFaceId) {
     try {
-      const response = await http.delete("/api/clients/"+id+"/contact-faces/" + index);
+      const response = await http.delete("/api/clients/"+clientId+"/contact-faces/" + contactFaceId);
       return response.data ?? {};
     } catch (error) {
       console.error({ error });

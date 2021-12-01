@@ -49,8 +49,6 @@
 
 <script>
 import {
-  patchContactFaceById,
-  fetchContactFaceById,
   createContactFace,
 } from "@/netClient/clientService";
 export default {
@@ -79,24 +77,9 @@ export default {
   },
 
   methods: {
-    async fetchContactFace() {
-      try {
-        await fetchContactFaceById();
-      } catch (error) {
-        console.error({ error });
-      }
-    },
-    async patchContactFace() {
-      try {
-        await patchContactFaceById({ ...this.currentContactFace });
-      } catch (error) {
-        console.error({ error });
-        throw error;
-      }
-    },
+    
     async createContactFace() {
       try {
-        console.log("444444444444", { ...this.currentContactFace });
         await createContactFace(
           this.currentClientId,
           this.currentContactFace.name,
@@ -118,7 +101,7 @@ export default {
     async onSaveModalClicked() {
       try {
         await this.createContactFace();
-        this.$emit("success");
+        this.$emit("done");
         this.onCloseModalClicked();
       } catch (error) {
         console.error({ error });

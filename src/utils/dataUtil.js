@@ -18,6 +18,7 @@ const covertClient = (client = {}) => {
     return {
         expandable: !!contactFaceList?.length,
         id,
+        contactFaceList,
         name,
         inn,
         status,
