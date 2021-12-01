@@ -40,7 +40,7 @@
                   <v-flex xs12 sm12 md12>
                     <v-select
                       v-model="editedItem.clientName"
-                      :items="this.clientNames"
+                      :items="this.clientNameList"
                       label="Клиент*"
                       color="light-blue accent-3"
                       required
@@ -97,6 +97,7 @@ import {
 import {
   fetchClientList
 } from "@/netClient/clientService"
+
 export default {
   name: "ContractsPage",
   data: () => ({
@@ -104,7 +105,7 @@ export default {
     dialog: false,
     currentUser: [],
     clients: [],
-    clientNames: [],
+    clientNameList: [],
     expand: [],
     search: "",
     headers: [
@@ -146,53 +147,51 @@ export default {
   methods: {
     refresh() {
       this.getAllClients()
-      this.getClientNames()
+      this.getClientsNames()
       //console.log(this.clients)
     },
 
     async getAllClients() {
       try {
         this.clients = await fetchClientList();
-        console.log(this.clients)
-      } catch (error) {
+        this.clients.forEach((element) => {
+          this.clientNameList.push(element.name)
+        })
+        console.log(this.clientNameList)
+      }
+      catch (error) {
         console.error({ error });
       }
     },
 
-    getClientNames() {
+    getClientsNames() {
       this.clients.forEach((element) => {
-        //console.log(element)
-        //if(element.ogrn)
-        this.clientNames.push(element.name);
+        this.clientNameList.push(element.name);
       });
     },
 
     startCreateTask() {
-      this.getClientNames()
+      this.getClientsNames()
     },
 
     async submitCreateContract(){
       console.log(this.editedItem)
       
-      this.employees.forEach(element => {
-        if(element.name == this.editedItem.executorName){
-          this.editedItem.executorId = element.id
+      this.clients.forEach(element => {
+        if(element.name == this.editedItem.clientName){
+          this.editedItem.clientId = element.id
         }
       })
-      if(this.editedItem.executorId){
+      if(this.editedItem.clientId){
         try {
         await createContract(
-            this.currentUser.id,
-            this.editedItem.executorId,
-            this.editedItem.priority,
-            this.editedItem.status,
-            this.editedItem.type,
-            this.editedItem.deadline
+            this.editedItem.clientId,
+            this.editedItem.info,
         )
       } catch (error){
         console.error({ error });
       }
-      }
+    }
       
     },
 
@@ -205,5 +204,6 @@ export default {
     },
 
   },
-};
+
+}
 </script>
