@@ -78,7 +78,6 @@ export default {
 
   methods: {
     
-    
     async createContactFace() {
       try {
         await createContactFace(
@@ -102,7 +101,7 @@ export default {
     async onSaveModalClicked() {
       try {
         await this.createContactFace();
-        this.$emit("success");
+        this.$emit("done");
         this.onCloseModalClicked();
       } catch (error) {
         console.error({ error });

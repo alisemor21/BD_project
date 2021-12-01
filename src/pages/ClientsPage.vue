@@ -230,6 +230,7 @@ export default {
 			this.currentClient = null;
 			this.currentContactFace = null;
 			this.contactFacesModalVisible = false;
+			this.fetchClients();
 		},
 
 		getStatusCellColor(statusCode) {
