@@ -56,31 +56,6 @@ export async function fetchClientById(id) {
     }
 }
 
-// export async function getMyInfo() {
-//     try {
-//         const response = await http.get("/api/employees/me");
-//         return response.data ?? {};
-//     } catch (error) {
-//         console.error({ error });
-//         throw error;
-//     }
-// }
-
-export async function fetchContactFaceById(id) {
-    try {
-      const response = await http.get("/api/clients/"+id+ "/contact-faces", {
-        // params: {
-        //   id,
-        // }
-      });
-      console.log('22222222', response.data.contactFacesList)
-      return response.data.contactFacesList ?? [];
-    } catch (error) {
-      console.error({ error });
-      throw error;
-    }
-  }
-
 
 export async function createContactFace(id, name, phone, email) {
     try {
