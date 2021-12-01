@@ -35,29 +35,27 @@
             <v-card-text>
               <v-container grid-list-md>
                 <v-layout wrap>
-
-                    <!-- По аналогии с работниками в тасках достать клиентов в ALL CLIENTS -->
+                  <!-- По аналогии с работниками в тасках достать клиентов в ALL CLIENTS -->
 
                   <v-flex xs12 sm12 md12>
                     <v-select
-                      v-model="editedItem.clientId"
-                      :items="['ALL CLIENTS']"
+                      v-model="editedItem.clientName"
+                      :items="this.clientNames"
                       label="Клиент*"
                       color="light-blue accent-3"
                       required
                     ></v-select>
                   </v-flex>
 
-                    <v-flex xs12 sm12 md12>
-                      <v-textarea
-                        v-model="editedItem.info"
-                        background-color="amber lighten-4"
-                        color="orange orange-darken-4"
-                        label="Информация по контракту"
-                        required
-                      ></v-textarea>
-                    </v-flex>
-
+                  <v-flex xs12 sm12 md12>
+                    <v-textarea
+                      v-model="editedItem.info"
+                      background-color="amber lighten-4"
+                      color="orange orange-darken-4"
+                      label="Информация по контракту"
+                      required
+                    ></v-textarea>
+                  </v-flex>
                 </v-layout>
               </v-container>
             </v-card-text>
@@ -65,7 +63,9 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="light-blue accent-3" @click="close">Отменить</v-btn>
-              <v-btn color="green accent-2" @click="submitCreateTask">Сохранить</v-btn>
+              <v-btn color="green accent-2" @click="submitCreateContract"
+                >Сохранить</v-btn
+              >
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -77,9 +77,9 @@
         class="elevation-1"
         :search="search"
       >
-                                            <!-- Ничего пока не делают)))) -->
+        <!-- Ничего пока не делают)))) -->
         <template v-slot:item.edit="{ item }">
-          <v-icon color="green darken-1" @click="editItem(item)"> edit </v-icon>  
+          <v-icon color="green darken-1" @click="editItem(item)"> edit </v-icon>
         </template>
         <template v-slot:item.delete="{ item }">
           <v-icon color="red" @click="deleteItem(item)"> delete </v-icon>
@@ -90,41 +90,40 @@
 </template>
 
 <script>
-// import {
-//   // getAllTasks,
-//   // getTaskById,
-//   createTask,
-//   // patchTaskById,
-//   // deleteTaskById,
-// } from "@/netClient/taskService";
-// import { getAllEmployees, getMyInfo } from "@/netClient/employeesService";
+import { 
+    //getAllContracts,
+    createContract
+} from "@/netClient/contractService";
+import {
+  fetchClientList
+} from "@/netClient/clientService"
 export default {
   name: "ContractsPage",
   data: () => ({
     role: "MANAGER",
     dialog: false,
     currentUser: [],
-    employees: [],
-    employeesNames: [],
+    clients: [],
+    clientNames: [],
     expand: [],
     search: "",
     headers: [
-      
       { text: "Клиент", value: "clientId" },
       { text: "Информация по контракту", value: "info" },
 
       { text: "", value: "edit", sortable: false },
       { text: "", value: "delete", sortable: false },
     ],
-    tasks: [],
+    contracts: [],
     editedIndex: -1,
     editedItem: {
-      clientId:'',
-      info:'',
+      clientId: "",
+      clientName: "Клиент",
+      info: "",
     },
     defaultItem: {
-      clientId:'',
-      info:'',
+      clientId: "",
+      info: "",
     },
   }),
 
@@ -145,6 +144,65 @@ export default {
   },
 
   methods: {
+    refresh() {
+      this.getAllClients()
+      this.getClientNames()
+      //console.log(this.clients)
+    },
+
+    async getAllClients() {
+      try {
+        this.clients = await fetchClientList();
+        console.log(this.clients)
+      } catch (error) {
+        console.error({ error });
+      }
+    },
+
+    getClientNames() {
+      this.clients.forEach((element) => {
+        //console.log(element)
+        //if(element.ogrn)
+        this.clientNames.push(element.name);
+      });
+    },
+
+    startCreateTask() {
+      this.getClientNames()
+    },
+
+    async submitCreateContract(){
+      console.log(this.editedItem)
+      
+      this.employees.forEach(element => {
+        if(element.name == this.editedItem.executorName){
+          this.editedItem.executorId = element.id
+        }
+      })
+      if(this.editedItem.executorId){
+        try {
+        await createContract(
+            this.currentUser.id,
+            this.editedItem.executorId,
+            this.editedItem.priority,
+            this.editedItem.status,
+            this.editedItem.type,
+            this.editedItem.deadline
+        )
+      } catch (error){
+        console.error({ error });
+      }
+      }
+      
+    },
+
+    close() {
+      this.dialog = false;
+      setTimeout(() => {
+        this.editedItem = Object.assign({}, this.defaultItem);
+        this.editedIndex = -1;
+      }, 300);
+    },
 
   },
 };
