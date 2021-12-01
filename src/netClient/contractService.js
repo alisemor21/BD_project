@@ -3,7 +3,7 @@ import http from "@/netClient/config";
 export async function getAllContracts() {
   try {
     const response = await http.get("/api/contracts", {});
-    return response.data.employees ?? [];
+    return response.data.result ?? [];
   } catch (error) {
     console.error({ error });
     throw error;
