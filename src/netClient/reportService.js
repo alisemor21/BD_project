@@ -8,7 +8,7 @@ export async function getAllReports() {
         "x-access-token": localStorage.accessToken,
       },
     });
-    return response.data.tasks ?? [];
+    return response.data.result ?? [];
   } catch (error) {
     console.error({ error });
     throw error;

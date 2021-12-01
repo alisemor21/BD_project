@@ -92,9 +92,10 @@
 </template>
 
 <script>
-import { getAllEmployees } from "@/netClient/employeesService";
+import { getAllReports } from "@/netClient/reportService";
+import {getAllEmployees} from "@/netClient/employeesService"
 export default {
-  name: "EmployeesPage",
+  name: "ReportsPage",
   data: () => ({
     dialog: false,
     expand: [],
@@ -160,32 +161,39 @@ export default {
     //     this.reports.splice(index, 1);
     // },
     refresh() {
-			this.fetchEmployeesList();
+			this.fetchReportsList();
+      this.fetchEmployeesList();
 		},
 
-    async fetchEmployeesList() {
+    async fetchReportsList() {
       try {
-        this.employees = await getAllEmployees();
-        console.log(this.employees)
+        this.reports = await getAllReports();
       } catch (error){
         console.error({ error });
       }
     },
 
-    getEmployeesNames() {
-      this.employees.forEach(element => {
-        this.employeesNames.push(element.name)
-      });
+    async fetchEmployeesList() {
+      try {
+        this.reports = await getAllEmployees();
+      } catch (error){
+        console.error({ error });
+      }
     },
+
+    // getEmployeesNames() {
+    //   this.employees.forEach(element => {
+    //     this.employeesNames.push(element.name)
+    //   });
+    // },
 
     startCreateReport(){
       this.fetchEmployeesList()
-      this.getEmployeesNames()
-      console.log(this.employeesNames)
     },
 
     downloadItem() {
       alert("Скачать отчёт?");
+
     },
 
     close() {
