@@ -78,11 +78,11 @@
 							v-for="contactFace in item.contactFaceList"
 							:key="contactFace.id"
 						>
-							<div class="name">
+							<div>
 								{{ contactFace.name }} {{ contactFace.phone }}
 								{{ contactFace.email }} {{contactFace.contactFaceStatus}}
 							</div>
-							<div v-if="role === 'ADMIN'">
+							<div v-if="role === 'ADMIN' && contactFace.contactFaceStatus ==='ACTIVE'">
 								<v-icon
 									color="red"
 									@click="deleteContact(item.id, contactFace.id)"
