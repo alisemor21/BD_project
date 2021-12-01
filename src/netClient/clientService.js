@@ -48,7 +48,7 @@ export async function deleteClientById(id) {
 
 export async function fetchClientById(id) {
     try {
-        const response = await http.get("/api/clients/" + id);
+        const response = await http.get("/api/clients/" + id);    //ненужно
         return covertClient(response.data);
     } catch (error) {
         console.error({ error });
@@ -65,6 +65,20 @@ export async function fetchClientById(id) {
 //         throw error;
 //     }
 // }
+
+export async function fetchContactFaceById(id) {
+    try {
+      const response = await http.get("/api/clients/"+id+ "/contact-faces", {
+        // params: {
+        //   id,
+        // }
+      });
+      return response.data.contactFacesList ?? [];
+    } catch (error) {
+      console.error({ error });
+      throw error;
+    }
+  }
 
 
 export async function createContactFace(id, name, phone, email) {
