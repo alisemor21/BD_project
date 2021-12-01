@@ -56,13 +56,35 @@ export async function fetchClientById(id) {
     }
 }
 
-export async function getMyInfo() {
-    try {
-        const response = await http.get("/api/employees/me");
-        return response.data ?? {};
-    } catch (error) {
-        console.error({ error });
-        throw error;
-    }
-}
+// export async function getMyInfo() {
+//     try {
+//         const response = await http.get("/api/employees/me");
+//         return response.data ?? {};
+//     } catch (error) {
+//         console.error({ error });
+//         throw error;
+//     }
+// }
 
+
+export async function createContactFace(name, phone, email,id) {
+    try {
+      const response = await http.post("/api/clients/"+id+ "/contact-faces", {
+        name, phone, email
+      });
+      return response.data ?? [];
+    } catch (error) {
+      console.error({ error });
+      throw error;
+    }
+  }
+  
+  export async function deleteContactFaceById(id, index) {
+    try {
+      const response = await http.delete("/api/clients/"+id+"/contact-faces/" + index);
+      return response.data ?? {};
+    } catch (error) {
+      console.error({ error });
+      throw error;
+    }
+  }
