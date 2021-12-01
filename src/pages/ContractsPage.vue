@@ -21,7 +21,7 @@
                 dark
                 class="mb-2"
                 v-on="on"
-                @click="startCreateTask"
+                @click="startCreateContract"
                 >+ Создать новый контракт</v-btn
               >
             </template>
@@ -90,7 +90,11 @@
 </template>
 
 <script>
-import { getAllContracts, createContract } from "@/netClient/contractService";
+import { 
+  getAllContracts, 
+  createContract,
+  deleteContractById,
+   } from "@/netClient/contractService";
 import { fetchClientList } from "@/netClient/clientService";
 
 export default {
@@ -99,11 +103,13 @@ export default {
     role: "MANAGER",
     dialog: false,
     currentUser: [],
+    currentContract: [],
     clients: [],
     clientNameList: [],
     expand: [],
     search: "",
     headers: [
+      { text: "id контракт", value: "id" },
       { text: "Клиент", value: "clientId" },
       { text: "Информация по контракту", value: "info" },
 
@@ -171,8 +177,8 @@ export default {
       });
     },
 
-    startCreateTask() {
-      this.getClientsNames();
+    startCreateContract() {
+
     },
 
     async submitCreateContract() {
@@ -189,8 +195,20 @@ export default {
         }
 
         this.dialog = false;
+        this.refresh();
       }
     },
+
+    async deleteItem(item) {
+			this.currentContract = item;
+			//await deleteContractById(this.currentContract.id)
+      try {
+				this.contract = await deleteContractById(this.currentContract.id);
+				this.refresh()
+			} catch (error) {
+				console.error({ error });
+			}
+		},
 
     close() {
       this.dialog = false;
