@@ -192,6 +192,7 @@ export default {
 			this.clientModalVisible = false;
 			this.fetchClients();
 		},
+
 		onClientModalClose() {
 			this.clientModalVisible = false;
 		},
@@ -234,12 +235,12 @@ export default {
 		getStatusCellColor(statusCode) {
 			return getCLientEnumColor(statusCode);
 		},
-		deleteContact(clientId, contactFaceId) {
+		async deleteContact(clientId, contactFaceId) {
 			console.warn({ clientId, contactFaceId });
 			if (confirm('Удалить контактное лицо?')) {
-				deleteContactFaceById(clientId, contactFaceId);
-				this.fetchClients();
+				await deleteContactFaceById(clientId, contactFaceId);
 			}
+			await this.fetchClients();
 		},
 	},
 };
