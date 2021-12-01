@@ -93,7 +93,7 @@
 
 <script>
 import { getAllReports } from "@/netClient/reportService";
-import {getAllEmployees} from "@/netClient/employeesService"
+import {getAllEmployees} from "@/netClient/employeesService";
 export default {
   name: "ReportsPage",
   data: () => ({
@@ -104,7 +104,7 @@ export default {
     search: "",
     headers: [
       {
-        text: "ФИО Работника",
+        text: "Работник",
         align: "left",
         sortable: false,
         value: "employee",
@@ -112,7 +112,6 @@ export default {
       { text: "От", value: "startDate" },
       { text: "До", value: "endDate" },
 
-      // { text: "", value: "edit", sortable: false },
       { text: "", value: "download", sortable: false },
     ],
     reports: [],
@@ -134,7 +133,7 @@ export default {
       return this.editedIndex === -1
         ? "Создание нового отчёта"
         : "Редактировать";
-      // return this.editedIndex === -1 ? "Создание нового отчёта" : "Редактировать";
+      
     },
   },
 
@@ -149,17 +148,7 @@ export default {
 	},
 
   methods: {
-    // editItem(item) {
-    //   this.editedIndex = this.reports.indexOf(item);
-    //   this.editedItem = Object.assign({}, item);
-    //   this.dialog = true;
-    // },
-
-    // deleteItem(item) {
-    //   const index = this.reports.indexOf(item);
-    //   confirm("Are you sure you want to delete this item?") &&
-    //     this.reports.splice(index, 1);
-    // },
+    
     refresh() {
 			this.fetchReportsList();
       this.fetchEmployeesList();
@@ -175,20 +164,22 @@ export default {
 
     async fetchEmployeesList() {
       try {
-        this.reports = await getAllEmployees();
+        this.employees = await getAllEmployees();
+        console.log(this.employees);
       } catch (error){
         console.error({ error });
       }
     },
 
-    // getEmployeesNames() {
-    //   this.employees.forEach(element => {
-    //     this.employeesNames.push(element.name)
-    //   });
-    // },
+    getEmployeesNames() {
+      this.employees.forEach((element) => {
+      this.employeesNames.push(element.name);  
+      });
+    },
 
     startCreateReport(){
-      this.fetchEmployeesList()
+      this.fetchEmployeesList();
+      this.getEmployeesNames();
     },
 
     downloadItem() {

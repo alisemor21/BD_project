@@ -107,8 +107,6 @@
                     ></v-select>
                   </v-flex>
 
-               
-
                   <v-flex xs12 sm12 md12>
                     <v-textarea
                       v-model="editedItem.type"
@@ -195,7 +193,6 @@ export default {
       { text: "Дедлайн", value: "deadline" },
       { text: "Контактное лицо", value: "contactFaceId" },
       { text: "Контракт", value: "contractId" },
-      
 
       { text: "", value: "edit", sortable: false },
       { text: "", value: "delete", sortable: false },
