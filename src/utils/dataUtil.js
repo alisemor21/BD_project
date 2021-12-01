@@ -9,17 +9,25 @@ const prepareFormData = (form) => {
 }
 
 const covertClientList = (clientList = []) => {
-    return clientList.map((client) => ({
-        expandable: !!client.contactFaceList?.length,
-        ...client.clientInfos,
-        ...client,
-    }))
+    return clientList.map(covertClient)
 }
 
 const covertClient = (client = {}) => {
+    const { contactFaceList, clientInfos, id, status } = client ?? {};
+    const { name, address, phone, city, email, fax, mailAdress, inn, ogrn } = clientInfos ?? {};
     return {
-        ...client.clientInfos,
-        ...client
+        expandable: !!contactFaceList?.length,
+        id,
+        name,
+        inn,
+        status,
+        address,
+        phone,
+        city,
+        mailAdress,
+        email,
+        fax,
+        ogrn,
     }
 }
 

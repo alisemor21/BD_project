@@ -1,5 +1,5 @@
 <template>
-	<v-dialog v-model="dialogContactFaces" max-width="500px">
+	<v-dialog v-model="contactFaceModal" max-width="500px">
 		<v-card>
 			<v-card-title>
 				<span class="headline">{{ formTitleContactFaces }}</span>
@@ -10,22 +10,22 @@
 					<v-layout wrap>
 						<v-flex xs12 sm12 md12>
 							<v-text-field
-								v-model="editedContactFace.name"
-								label="ФИО"
+								v-model="currentContactFace.name"
+								label="ФИО *"
 								hint="фамилия имя отчество через пробел"
 								color="light-blue accent-3"
 							></v-text-field>
 						</v-flex>
 						<v-flex xs12 sm4 md4>
 							<v-text-field
-								v-model="editedContactFace.phone"
+								v-model="currentContactFace.phone"
 								label="Телефон"
 								color="light-blue accent-3"
 							></v-text-field>
 						</v-flex>
 						<v-flex xs12 sm8 md8>
 							<v-text-field
-								v-model="editedContactFace.email"
+								v-model="currentContactFace.email"
 								label="Email"
 								color="light-blue accent-3"
 							></v-text-field>
@@ -36,31 +36,25 @@
 
 			<v-card-actions>
 				<v-spacer></v-spacer>
-				<v-btn color="light-blue accent-3" @click="closeContactFaceModal"
-					>Отменить контакт</v-btn
-				>
-				<v-btn color="green accent-2" @click="saveContactFaceModal"
-					>Сохранить контакт</v-btn
-				>
+				<v-btn color="light-blue accent-3" @click="onCloseModalClicked">
+					Отменить
+				</v-btn>
+				<v-btn color="green accent-2" @click="onSaveModalClicked">
+					Сохранить контакт
+				</v-btn>
 			</v-card-actions>
 		</v-card>
 	</v-dialog>
 </template>
 
 <script>
+import { patchContactFaceById, fetchContactFaceById, createContactFace } from '@/netClient/clientService';
 export default {
 	name: 'ContactFaceControlModal',
-	props: ['currentContactFace'],
 	data: () => ({
-		dialogContactFaces: false,
-		modalMode: "create",
-		editedContactFace: {
-			name: '',
-			email: '',
-			phone: '',
-		},
-
-		defaultContactFace: {
+		contactFaceModal: false,
+		modalMode: 'create',
+		currentContactFace: {
 			name: '',
 			email: '',
 			phone: '',
@@ -70,41 +64,67 @@ export default {
 	computed: {
 		formTitleContactFaces() {
 			return this.modalMode === 'create'
-				? 'Новый контакт'
-				: 'Редактирование контакта';
+				? 'Новое контактное лицо'
+				: 'Редактирование контактного лица';
 		},
 	},
 
 	watch: {
-		dialogContactFaces(val) {
-			console.log('DialogContactFaces.val =', val);
+		contactFaceModal(val) {
+			console.log('contactFaceModal.val =', val);
 			val || this.closeContactFaceModal();
 		},
 	},
 
 	methods: {
-
-        openContactFaceModal(contactFace) {
-			if (contactFace) {
-				this.editedContactFace = contactFace;
+		async fetchContactFace() {
+			try {
+				await fetchContactFaceById();
+			} catch (error) {
+				console.error({ error });
 			}
-			this.modalMode = contactFace ? 'edit' : 'create';
-			this.dialogContactFaces = true;
 		},
-		closeContactFaceModal() {
-			this.$emit('done', null);
-			this.dialogContactFaces = false;
+		async patchContactFace() {
+			try {
+				await patchContactFaceById({ ...this.currentContactFace });
+			} catch (error) {
+				console.error({ error });
+				throw error;
+			}
 		},
-
-		saveContactFaceModal() {
-			const contactFace = this.modalMode === 'create'
-				? {
-					...this.editedContactFace,
-					id: Date.now().toString(),
-					}
-				: this.editedContactFace;
-			this.$emit('done', contactFace);
-			this.closeContactFaceModal();
+		async createContactFace() {
+			try {
+				await createContactFace({ ...this.currentContactFace });
+			} catch (error) {
+				console.error({ error });
+				throw error;
+			}
+		},
+		async openContactFaceModal(contactFaceId) {
+			if (contactFaceId) {
+				this.currentContactFace = await fetchContactFaceById(contactFaceId);
+				this.modalMode = 'edit';
+			} else {
+				this.currentContactFace = {};
+				this.modalMode = 'create';
+			}
+			this.contactFaceModal = true;
+		},
+		async onSaveModalClicked() {
+			try {
+				this.modalMode === 'create'
+					? await this.createContactFace()
+					: await this.patchContactFace();
+				this.$emit('success');
+				this.onCloseModalClicked();
+			} catch (error) {
+				console.error({ error });
+				this.$emit('error');
+			}
+		},
+		onCloseModalClicked() {
+			this.$emit('close');
+			this.contactFaceModal = false;
 		},
 	},
 };

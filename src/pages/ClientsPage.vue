@@ -24,7 +24,6 @@
 			></v-text-field>
 			<v-spacer></v-spacer>
 		</v-toolbar>
-
 		<v-data-table
 			:headers="headers"
 			:items="clientsList"
@@ -59,7 +58,7 @@
 				/>
 			</template>
 			<template v-if="role === 'ADMIN'" v-slot:item.editClient="{ item }">
-				<v-icon color="green darken-1" @click="startEditClient(item)">
+				<v-icon  v-if="item.status !== 'INACTIVE'" color="green darken-1" @click="startEditClient(item)">
 					edit
 				</v-icon>
 			</template>
@@ -67,7 +66,7 @@
 				v-if="role === 'ADMIN'"
 				v-slot:item.deleteClient="{ item }"
 			>
-				<v-icon color="red" @click="deleteClient(item)">
+				<v-icon v-if="item.status !== 'INACTIVE'" color="red" @click="deleteClient(item)">
 					delete
 				</v-icon>
 			</template>
@@ -133,13 +132,13 @@ export default {
 		expanded: [],
 		headers: [
 			{ text: 'Cтатус', value: 'status' },
-			{ text: 'Имя', align: 'left', sortable: true, value: 'name' },
+			{ text: 'Имя', value: 'name', align: 'left' },
 			{ text: 'ИНН', value: 'inn', sortable: false },
 			// { text: 'Email', value: 'email', sortable: false },
 			// { text: 'Телефон', value: 'phone', sortable: false },
-			{ text: 'Город', value: 'city', sortable: false },
+			// { text: 'Город', value: 'city', sortable: false },
 			// { text: 'fax', value: 'fax', sortable: false },
-			// { text: 'Адрес', value: 'address', sortable: false },
+			// { text: 'Адрес', value: 'mailAdress', sortable: false },
 			// { text: 'ОГРН', value: 'ogrn', sortable: false },
 			{ text: '', value: 'addContactFace', sortable: false },
 			{ text: '', value: 'editClient', sortable: false },
