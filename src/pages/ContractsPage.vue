@@ -90,13 +90,8 @@
 </template>
 
 <script>
-import { 
-    //getAllContracts,
-    createContract
-} from "@/netClient/contractService";
-import {
-  fetchClientList
-} from "@/netClient/clientService"
+import { getAllContracts, createContract } from "@/netClient/contractService";
+import { fetchClientList } from "@/netClient/clientService";
 
 export default {
   name: "ContractsPage",
@@ -146,20 +141,26 @@ export default {
 
   methods: {
     refresh() {
-      this.getAllClients()
-      this.getClientsNames()
-      //console.log(this.clients)
+      this.getAllClients();
+      this.getClientsNames();
+      this.fetchAllContracts();
+    },
+
+    async fetchAllContracts() {
+      try {
+        this.contracts = await getAllContracts();
+      } catch (error) {
+        console.error({ error });
+      }
     },
 
     async getAllClients() {
       try {
         this.clients = await fetchClientList();
         this.clients.forEach((element) => {
-          this.clientNameList.push(element.name)
-        })
-        console.log(this.clientNameList)
-      }
-      catch (error) {
+          this.clientNameList.push(element.name);
+        });
+      } catch (error) {
         console.error({ error });
       }
     },
@@ -171,28 +172,24 @@ export default {
     },
 
     startCreateTask() {
-      this.getClientsNames()
+      this.getClientsNames();
     },
 
-    async submitCreateContract(){
-      console.log(this.editedItem)
-      
-      this.clients.forEach(element => {
-        if(element.name == this.editedItem.clientName){
-          this.editedItem.clientId = element.id
+    async submitCreateContract() {
+      this.clients.forEach((element) => {
+        if (element.name == this.editedItem.clientName) {
+          this.editedItem.clientId = element.id;
         }
-      })
-      if(this.editedItem.clientId){
+      });
+      if (this.editedItem.clientId) {
         try {
-        await createContract(
-            this.editedItem.clientId,
-            this.editedItem.info,
-        )
-      } catch (error){
-        console.error({ error });
+          await createContract(this.editedItem.clientId, this.editedItem.info);
+        } catch (error) {
+          console.error({ error });
+        }
+
+        this.dialog = false;
       }
-    }
-      
     },
 
     close() {
@@ -202,8 +199,6 @@ export default {
         this.editedIndex = -1;
       }, 300);
     },
-
   },
-
-}
+};
 </script>
