@@ -1,5 +1,5 @@
 const CLIENT_STATUSES = {
-    'CURRENT': 'Текущий',
+    'CURRENT': 'Активный',
     'FUTURE': 'Будущий',
     'INACTIVE': 'Неактивен'
 }

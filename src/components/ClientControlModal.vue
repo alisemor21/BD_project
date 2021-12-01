@@ -8,16 +8,15 @@
 			<v-card-text>
 				<v-container grid-list-md>
 					<v-layout wrap>
-						<v-flex xs12 sm12 md12 lg12>
+						<v-flex xs12 sm12 md12 lg12 class="mb-4">
 							<v-checkbox
 								v-if="modalMode === 'create'"
 								@change="onCompanyCheckClicked"
 								:value="companyCheck"
 								label="Юр. лицо?"
 								hide-details
-								class="shrink mb-4"
 								color="light-blue accent-3"
-							></v-checkbox>
+							/>
 						</v-flex>
 						<v-flex xs12 sm6 md6 lg6>
 							<v-text-field
@@ -33,67 +32,67 @@
 										: 'Через пробел: Фамилия, Имя, Отчество'
 								"
 								color="light-blue accent-3"
-							></v-text-field>
+							/>
 						</v-flex>
 						<v-flex xs12 sm6 md6 lg6>
 							<v-text-field
 								v-model="currentClient.inn"
 								label="ИНН *"
 								color="light-blue accent-3"
-							></v-text-field>
+							/>
 						</v-flex>
 						<v-flex xs12 sm12 md12 lg12>
 							<v-select
 								v-model="currentClient.status"
 								:items="clientStatuses"
-                                item-text="label"
+								item-text="label"
 								item-value="code"
 								label="Статус"
 								color="light-blue accent-3"
 								required
-							></v-select>
+							/>
 						</v-flex>
 						<v-flex xs12 sm6 md6 lg6>
 							<v-text-field
 								v-model="currentClient.city"
 								label="Город"
 								color="light-blue accent-3"
-							></v-text-field>
+							/>
 						</v-flex>
 						<v-flex xs12 sm6 md6 lg6>
 							<v-text-field
 								v-model="currentClient.address"
 								label="Адрес"
 								color="light-blue accent-3"
-							></v-text-field>
+							/>
 						</v-flex>
 						<v-flex xs12 sm6 md6 lg6>
 							<v-text-field
 								v-model="currentClient.phone"
 								label="Телефон"
 								color="light-blue accent-3"
-							></v-text-field>
+							/>
 						</v-flex>
 						<v-flex xs12 sm6 md6 lg6>
 							<v-text-field
 								v-model="currentClient.email"
 								label="Email"
 								color="light-blue accent-3"
-							></v-text-field>
+							/>
 						</v-flex>
 						<v-flex xs12 sm6 md6 lg6>
 							<v-text-field
 								v-model="currentClient.fax"
 								label="Факс"
 								color="light-blue accent-3"
-							></v-text-field>
+							/>
 						</v-flex>
 						<v-flex v-if="showCompanyFields" xs12 sm6 md6 lg6>
 							<v-text-field
 								v-model="currentClient.ogrn"
-								label="ОГРН"
+								label="ОГРН *"
 								color="light-blue accent-3"
-							></v-text-field>
+							/>
 						</v-flex>
 					</v-layout>
 				</v-container>
@@ -104,7 +103,11 @@
 				<v-btn color="light-blue accent-3" @click="onCloseModalClicked">
 					Отменить
 				</v-btn>
-				<v-btn color="green accent-2" @click="onSaveModalClicked">
+				<v-btn
+					:disabled="!formValid"
+					color="green accent-2"
+					@click="onSaveModalClicked"
+				>
 					Сохранить
 				</v-btn>
 			</v-card-actions>
@@ -142,7 +145,6 @@ export default {
 			ogrn: '',
 		},
 	}),
-
 	computed: {
 		clientStatuses() {
 			return Object.keys(CLIENT_STATUSES).map((code) => ({
@@ -158,13 +160,22 @@ export default {
 		},
 		formTitle() {
 			return this.modalMode === 'create'
-				? 'Новый клиент'
+				? 'Добавить нового клиента'
 				: 'Редактирование клиента';
 		},
 		showCompanyFields() {
 			return this.modalMode === 'create'
 				? this.companyCheck
 				: !!this.currentClient?.ogrn?.length;
+		},
+		formValid() {
+			const baseFields = Boolean(
+				this.currentClient?.name?.trim()?.length &&
+					this.currentClient?.inn?.trim()?.length,
+			);
+			return this.showCompanyFields
+				? baseFields && !!this.currentClient?.ogrn?.trim()?.length
+				: baseFields;
 		},
 	},
 	methods: {
@@ -174,22 +185,19 @@ export default {
 			}
 			this.companyCheck = isCompany;
 		},
-		async openModal(client) {
-			if (client?.id) {
-				this.currentClient = await fetchClientById(client);
+		async openModal(clientId) {
+			if (clientId) {
+				this.currentClient = await fetchClientById(clientId);
 				if (this.showCompanyFields) {
 					this.companyCheck = true;
 				}
 				this.modalMode = 'edit';
 			} else {
+				this.currentClient = {};
 				this.currentClient.status = this.clientStatusCodes[0];
 				this.modalMode = 'create';
 			}
 			this.dialog = true;
-		},
-		onCloseModalClicked() {
-			this.$emit('done', null);
-			this.dialog = false;
 		},
 		async fetchClient() {
 			try {
@@ -200,39 +208,36 @@ export default {
 		},
 		async patchClient() {
 			try {
-				await patchClientById(
-					this.currentClient.id,
-					this.currentClient.name,
-					this.currentClient.inn,
-					this.currentClient.status,
-
-					this.currentClient.city,
-					this.currentClient.address,
-
-					this.currentClient.phone,
-					this.currentClient.email,
-					this.currentClient.fax,
-
-					this.currentClient.ogrn,
-				);
+				await patchClientById({ ...this.currentClient });
 			} catch (error) {
 				console.error({ error });
+				throw error;
 			}
 		},
 		async createClient() {
 			try {
-				await createClient();
+				await createClient({ ...this.currentClient });
 			} catch (error) {
 				console.error({ error });
+				throw error;
 			}
 		},
 		async onSaveModalClicked() {
-			const client =
+			try {
 				this.modalMode === 'create'
 					? await this.createClient()
 					: await this.patchClient();
-			this.$emit('done', client);
-			this.onCloseModalClicked();
+				this.$emit('success');
+				this.onCloseModalClicked();
+			} catch (error) {
+				console.error({ error });
+				this.$emit('error');
+			}
+		},
+		onCloseModalClicked() {
+			this.$emit('close');
+			this.currentClient = null;
+			this.dialog = false;
 		},
 	},
 };

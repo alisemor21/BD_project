@@ -1,19 +1,20 @@
 import http from "@/netClient/config";
+import { prepareFormData, covertClientList, covertClient } from "@/utils/dataUtil";
 
 export async function fetchClientList() {
     try {
         const response = await http.get("/api/clients");
-        return response.data.employees ?? [];
+        return covertClientList(response.data.result);
     } catch (error) {
         console.error({ error });
         throw error;
     }
 }
 
-export async function createClient(name, inn, ogrn, contactFaceList) {
+export async function createClient(formData) {
     try {
-        const response = await http.post("/api/clients", {
-            name, inn, ogrn, contactFaceList
+        const response = await http.post("/api/clients/", {
+            ...prepareFormData(formData)
         });
         return response.data?.result ?? [];
     } catch (error) {
@@ -22,13 +23,11 @@ export async function createClient(name, inn, ogrn, contactFaceList) {
     }
 }
 
-export async function patchClientById(id, name, role, login, password) {
+export async function patchClientById(formData) {
+    const { id, ...otherFields } = formData;
     try {
         const response = await http.patch("/api/clients/" + id, {
-            name,
-            role,
-            login,
-            password,
+            ...prepareFormData(otherFields),
         });
         return response.data ?? [];
     } catch (error) {
@@ -49,12 +48,8 @@ export async function deleteClientById(id) {
 
 export async function fetchClientById(id) {
     try {
-        const response = await http.get("/api/clients", {
-            params: {
-                id,
-            },
-        });
-        return response.data ?? {};
+        const response = await http.get("/api/clients/" + id);
+        return covertClient(response.data);
     } catch (error) {
         console.error({ error });
         throw error;
