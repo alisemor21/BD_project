@@ -80,12 +80,12 @@
 						>
 							<div class="name">
 								{{ contactFace.name }} {{ contactFace.phone }}
-								{{ contactFace.email }}
+								{{ contactFace.email }} {{contactFace.contactFaceStatus}}
 							</div>
 							<div v-if="role === 'ADMIN'">
 								<v-icon
 									color="red"
-									@click="deleteContact(item)"
+									@click="deleteContact(item.id, contactFace.id)"
 								>
 									person_remove
 								</v-icon>
@@ -107,7 +107,7 @@
 <script>
 import ClientControlModal from '@/components/ClientControlModal';
 import ContactFaceControlModal from '@/components/ContactFaceControlModal';
-import { deleteClientById, fetchClientList } from '@/netClient/clientService';
+import { deleteClientById, fetchClientList, deleteContactFaceById } from '@/netClient/clientService';
 import { getCLientEnumColor, getEnumLabel } from '@/utils/enumUtil';
 
 export default {
@@ -234,17 +234,11 @@ export default {
 		getStatusCellColor(statusCode) {
 			return getCLientEnumColor(statusCode);
 		},
-		deleteContact(item) {
-			const answer = prompt(
-				'Номер контактного лица, которое хотите удалить?',
-			);
-			const indexClient = this.clientsList.indexOf(item);
-			if (answer) {
-				confirm('Точно удалить контакт?') &&
-					this.clientsList[indexClient].contactFaces.splice(
-						answer - 1,
-						1,
-					);
+		deleteContact(clientId, contactFaceId) {
+			console.warn({ clientId, contactFaceId });
+			if (confirm('Удалить контактное лицо?')) {
+				deleteContactFaceById(clientId, contactFaceId);
+				this.fetchClients();
 			}
 		},
 	},
