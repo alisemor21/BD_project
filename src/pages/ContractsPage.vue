@@ -110,7 +110,7 @@ export default {
     search: "",
     headers: [
       { text: "id контракт", value: "id" },
-      { text: "Клиент", value: "clientId" },
+      { text: "Клиент", value: "client.clientInfos.name" },
       { text: "Информация по контракту", value: "info" },
 
       { text: "", value: "edit", sortable: false },
