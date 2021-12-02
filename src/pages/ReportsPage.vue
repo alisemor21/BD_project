@@ -111,8 +111,7 @@ export default {
         text: "Работник",
         align: "left",
         sortable: false,
-        value: "report.reportedEmployee.name",
-        //reports.reportedEmployee.name
+        value: "reportedEmployee.name",
       },
       { text: "reportedЧелId", value: "id" },
       { text: "От", value: "startDate" },
@@ -143,7 +142,6 @@ export default {
       return this.editedIndex === -1
         ? "Создание нового отчёта"
         : "Редактировать";
-      
     },
   },
 
