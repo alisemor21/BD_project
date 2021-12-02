@@ -239,6 +239,12 @@ export default {
 		formTitle() {
 			return this.editedIndex === -1 ? 'Создать' : 'Редактировать';
 		},
+    /**
+     * CHECK THIS
+     */
+    currentRole() {
+      return localStorage.currentRole;
+    }
 	},
 	created() {
 		this.getCurrentUserInfo();
