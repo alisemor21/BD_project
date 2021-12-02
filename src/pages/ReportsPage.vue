@@ -113,6 +113,7 @@ export default {
         sortable: false,
         value: "employee",
       },
+      { text: "reportedЧелId", value: "id" },
       { text: "От", value: "startDate" },
       { text: "До", value: "endDate" },
 
@@ -164,6 +165,7 @@ export default {
     async fetchReportsList() {
       try {
         this.reports = await getAllReports();
+        console.log("reports: ", this.reports)
       } catch (error){
         console.error({ error });
       }
@@ -211,7 +213,6 @@ export default {
     async downloadItem(item) {
       alert("Скачать отчёт?");
       this.currentReport = item;
-      console.log("!!!!!!!!!!!!!!!!", this.currentReport.id)
       try {
 				this.report = await downloadReport(this.currentReport.id);
 				this.refresh()

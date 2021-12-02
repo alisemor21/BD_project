@@ -68,8 +68,8 @@ export async function downloadReport(id) {
           "x-access-token": localStorage.accessToken,
         },
       });
-      console.log("!!!!!!!!!!!!!!!!!!!!!!1", response.data, response.download)
-      return response.data ?? [];
+      console.log("!!!!!!!!!!!!!!!!!!!!!!1", /*response.data,*/ response.download)
+      return response.data ?? {};
     } catch (error) {
       console.error({ error });
       throw error;
