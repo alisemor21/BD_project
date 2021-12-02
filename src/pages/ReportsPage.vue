@@ -41,7 +41,7 @@
 
                     <v-flex xs12 sm8 md8>
                       <v-text-field
-                        v-model="editedItem.startDate"
+                        v-model="editedItem.dateFrom"
                         label="Дата начала отчёта*"
                         type="date"
                         color="light-blue accent-3"
@@ -51,7 +51,7 @@
 
                     <v-flex xs12 sm8 md8>
                       <v-text-field
-                        v-model="editedItem.endDate"
+                        v-model="editedItem.dateTo"
                         label="Дата окончания отчёта*"
                         type="date"
                         color="light-blue accent-3"
@@ -111,30 +111,28 @@ export default {
         text: "Работник",
         align: "left",
         sortable: false,
-        value: "report.reportedEmployee.name",
+        value: "reportedEmployee.name",
         //reports.reportedEmployee.name
       },
-      { text: "reportedЧелId", value: "id" },
-      { text: "От", value: "startDate" },
-      { text: "До", value: "endDate" },
+      { text: "От", value: "dateFrom" },
+      { text: "До", value: "dateTo" },
 
       { text: "", value: "download", sortable: false },
     ],
     reports: [],
-    report: [],
     reportsObject: [],
     currentReport: [],
     editedIndex: -1,
     editedItem: {
       employee: "",
       reportedEmployeeId: "",
-      startDate: "-",
-      endDate: "-",
+      dateFrom: "-",
+      dateTo: "-",
     },
     defaultItem: {
       employee: "",
-      startDate: "-",
-      endDate: "-",
+      dateFrom: "-",
+      dateTo: "-",
     },
   }),
 
@@ -167,13 +165,6 @@ export default {
     async fetchReportsList() {
       try {
         this.reports = await getAllReports();
-        
-        // this.reportsObject.reportList.forEach((element) => {
-        //   this.reports.push({element, });
-        // });
-
-        // this.reports = this.reportsObject.reportList;
-        console.log("reports: ", this.reports[0].reportedEmployee.name)
       } catch (error){
         console.error({ error });
       }
@@ -182,7 +173,6 @@ export default {
     async fetchEmployeesList() {
       try {
         this.employees = await getAllEmployees();
-        // console.log(this.employees);
       } catch (error){
         console.error({ error });
       }
@@ -201,14 +191,13 @@ export default {
 
     async submitCreateReport(){
       this.employees.forEach((element) => {
-        //console.log("!!!!!!!!!!!!!!!1", this.editedItem.employee)
         if (element.name == this.editedItem.employee) {
           this.editedItem.reportedEmployeeId = element.id;
         }
       });
       if (this.editedItem.reportedEmployeeId) {
         try {
-          await createReport(this.editedItem.reportedEmployeeId, this.editedItem.startDate, this.editedItem.endDate);
+          await createReport(this.editedItem.reportedEmployeeId, this.editedItem.dateFrom, this.editedItem.dateTo);
         } catch (error) {
           console.error({ error });
         }

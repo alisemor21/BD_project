@@ -8,7 +8,6 @@ export async function getAllReports() {
         "x-access-token": localStorage.accessToken,
       },
     });
-    console.log("response: ", response.data)
     return response.data.reportList ?? {};
   } catch (error) {
     console.error({ error });
@@ -34,14 +33,14 @@ export async function getReportById(id) {
   }
 }
 
-export async function createReport(reportedEmployeeId, startDate, endDate) {
+export async function createReport(reportedEmployeeId, dateFrom, dateTo) {
   try {
     const response = await http.post(
       "/api/reports",
       {
         reportedEmployeeId,
-        startDate,
-        endDate,
+        dateFrom,
+        dateTo,
       },
       {
         headers: {
