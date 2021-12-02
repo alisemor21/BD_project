@@ -55,23 +55,3 @@ export async function createReport(reportedEmployeeId, dateFrom, dateTo) {
     throw error;
   }
 }
-
-
-export async function downloadReport(id) {
-    try {
-      const response = await http.get("/api/reports/download/" + id, {
-        headers: {
-          "Content-Type": "application/json",
-          "x-access-token": localStorage.accessToken,
-        },
-      });
-      let blob = new Blob([response.data], { type: 'application/vnd.ms-excel' }),
-        url = window.URL.createObjectURL(blob)
-
-      window.open(url)
-      return response.data;
-    } catch (error) {
-      console.error({ error });
-      throw error;
-    }
-  }

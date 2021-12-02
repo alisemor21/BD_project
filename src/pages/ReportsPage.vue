@@ -95,7 +95,6 @@
 import { 
   getAllReports,
   createReport,
-  downloadReport, 
     } from "@/netClient/reportService";
 import {getAllEmployees} from "@/netClient/employeesService";
 export default {
@@ -209,7 +208,7 @@ export default {
       alert("Скачать отчёт?");
       this.currentReport = item;
       try {
-				this.report = await downloadReport(this.currentReport.id);
+        window.open('http://localhost:3001/api/reports/download/' + this.currentReport.id + '?x-access-token='+localStorage.accessToken)
 				this.refresh()
 			} catch (error) {
 				console.error({ error });
