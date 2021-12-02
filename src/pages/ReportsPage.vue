@@ -111,7 +111,8 @@ export default {
         text: "Работник",
         align: "left",
         sortable: false,
-        value: "employee",
+        value: "report.reportedEmployee.name",
+        //reports.reportedEmployee.name
       },
       { text: "reportedЧелId", value: "id" },
       { text: "От", value: "startDate" },
@@ -121,6 +122,7 @@ export default {
     ],
     reports: [],
     report: [],
+    reportsObject: [],
     currentReport: [],
     editedIndex: -1,
     editedItem: {
@@ -165,7 +167,13 @@ export default {
     async fetchReportsList() {
       try {
         this.reports = await getAllReports();
-        console.log("reports: ", this.reports)
+        
+        // this.reportsObject.reportList.forEach((element) => {
+        //   this.reports.push({element, });
+        // });
+
+        // this.reports = this.reportsObject.reportList;
+        console.log("reports: ", this.reports[0].reportedEmployee.name)
       } catch (error){
         console.error({ error });
       }
