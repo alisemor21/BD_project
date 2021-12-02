@@ -67,7 +67,7 @@
                 <v-btn color="light-blue accent-3" @click="close"
                   >Отменить</v-btn
                 >
-                <v-btn color="green accent-2" @click="save">Сохранить</v-btn>
+                <v-btn color="green accent-2" @click="submitCreateReport()">Сохранить</v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
@@ -92,7 +92,11 @@
 </template>
 
 <script>
-import { getAllReports } from "@/netClient/reportService";
+import { 
+  getAllReports,
+  createReport,
+  downloadReport, 
+    } from "@/netClient/reportService";
 import {getAllEmployees} from "@/netClient/employeesService";
 export default {
   name: "ReportsPage",
@@ -115,9 +119,12 @@ export default {
       { text: "", value: "download", sortable: false },
     ],
     reports: [],
+    report: [],
+    currentReport: [],
     editedIndex: -1,
     editedItem: {
       employee: "",
+      reportedEmployeeId: "",
       startDate: "-",
       endDate: "-",
     },
@@ -165,7 +172,7 @@ export default {
     async fetchEmployeesList() {
       try {
         this.employees = await getAllEmployees();
-        console.log(this.employees);
+        // console.log(this.employees);
       } catch (error){
         console.error({ error });
       }
@@ -182,9 +189,35 @@ export default {
       this.getEmployeesNames();
     },
 
-    downloadItem() {
-      alert("Скачать отчёт?");
+    async submitCreateReport(){
+      this.employees.forEach((element) => {
+        //console.log("!!!!!!!!!!!!!!!1", this.editedItem.employee)
+        if (element.name == this.editedItem.employee) {
+          this.editedItem.reportedEmployeeId = element.id;
+        }
+      });
+      if (this.editedItem.reportedEmployeeId) {
+        try {
+          await createReport(this.editedItem.reportedEmployeeId, this.editedItem.startDate, this.editedItem.endDate);
+        } catch (error) {
+          console.error({ error });
+        }
 
+        this.dialog = false;
+        this.refresh();
+      }
+    },
+
+    async downloadItem(item) {
+      alert("Скачать отчёт?");
+      this.currentReport = item;
+      console.log("!!!!!!!!!!!!!!!!", this.currentReport.id)
+      try {
+				this.report = await downloadReport(this.currentReport.id);
+				this.refresh()
+			} catch (error) {
+				console.error({ error });
+			}
     },
 
     close() {
