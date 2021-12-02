@@ -90,7 +90,7 @@
                   <v-flex xs12 sm6 md6>
                     <v-select
                       v-model="editedItem.contractId"
-                      :items="this.contractsId"
+                      :items="contracts"
                       label="Контракт*"
                       color="light-blue accent-3"
                       required
@@ -100,7 +100,7 @@
                   <v-flex xs12 sm6 md6>
                     <v-select
                       v-model="editedItem.contactFaceId"
-                      :items="this.contactFacesNames"
+                      :items="contactFacesNamesList"
                       label="Контактное лицо*"
                       color="light-blue accent-3"
                       required
@@ -166,9 +166,15 @@ import {
   // getAllTasks,
   // getTaskById,
   createTask,
-  // patchTaskById,
-  // deleteTaskById,
+  //patchTaskById,
+  deleteTaskById,
 } from "@/netClient/taskService";
+import {
+  getAllContracts
+} from "@/netClient/contractService"
+import {
+  fetchClientList
+} from "@/netClient/clientService"
 import { getAllEmployees, getMyInfo } from "@/netClient/employeesService";
 export default {
   name: "TaskPage",
@@ -198,7 +204,11 @@ export default {
       { text: "", value: "delete", sortable: false },
     ],
     tasks: [],
-    //editItemName: this.currentUser.name,
+    contactFaces: [],
+    contactFacesNamesList: [],
+    contracts: [],
+    currentTask: "",
+    task: "",
     editedIndex: -1,
     editedItem: {
       author: "",
@@ -208,6 +218,8 @@ export default {
       status: "ACTIVE",
       type: "",
       deadline: "",
+      contractId: "",
+      contactFaceId: "",
     },
     defaultItem: {
       author: "",
@@ -240,12 +252,15 @@ export default {
     refresh() {
       this.getCurrentUserInfo();
       this.fetchEmployeesList();
+      this.fetchContractList();
+      this.fetchContactFacesList();
+      this.getContactFacesNames();
     },
 
     async fetchEmployeesList() {
       try {
         this.employees = await getAllEmployees();
-        console.log(this.employees);
+        this.getEmployeesNames();
       } catch (error) {
         console.error({ error });
       }
@@ -259,6 +274,13 @@ export default {
       });
     },
 
+    getContactFacesNames() {
+      console.log("contactfaces:", this.contactFaces)
+      this.contactFaces.forEach((element) => {
+        this.contactFacesNamesList.push(element.name);
+      });
+    },
+
     async getCurrentUserInfo() {
       try {
         this.currentUser = await getMyInfo();
@@ -269,9 +291,35 @@ export default {
       }
     },
 
+    async fetchContractList() {
+      try {
+        this.contracts = await getAllContracts();
+        console.log("contracts", this.contracts)
+      } catch (error) {
+        console.error({ error });
+      }
+    },
+
+     async fetchContactFacesList() {
+      try {
+        let clients = await fetchClientList();
+        console.log("********", clients[0]);
+
+        this.clients.forEach((element) => {
+          this.contactFaces.push(element);
+      });
+
+        this.clients.forEach((element) => {
+          console.log("!!!!!!!", element.contactFaceList[0])
+          this.contactFaces.push(element.contactFaceList);
+        })
+      } catch (error) {
+        console.error({ error });
+      }
+    },
+
     startCreateTask() {
-      this.fetchEmployeesList();
-      this.getEmployeesNames();
+      this.refresh();
     },
 
     async submitCreateTask() {
@@ -316,10 +364,19 @@ export default {
       this.dialog = true;
     },
 
-    deleteItem(item) {
-      const index = this.tasks.indexOf(item);
-      confirm("Are you sure you want to delete this item?") &&
-        this.tasks.splice(index, 1);
+    async deleteItem(item) {
+      // const index = this.tasks.indexOf(item);
+      // confirm("Are you sure you want to delete this item?") &&
+      //   this.tasks.splice(index, 1);
+
+      this.currentTask = item;
+      confirm("Are you sure you want to delete this item?")
+      try {
+				this.task = await deleteTaskById(this.currentTask.id);
+				this.refresh()
+			} catch (error) {
+				console.error({ error });
+			}
     },
 
     close() {

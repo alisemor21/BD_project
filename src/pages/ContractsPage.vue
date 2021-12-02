@@ -208,7 +208,6 @@ export default {
 
     async deleteItem(item) {
 			this.currentContract = item;
-			//await deleteContractById(this.currentContract.id)
       try {
 				this.contract = await deleteContractById(this.currentContract.id);
 				this.refresh()
