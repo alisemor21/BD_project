@@ -112,7 +112,6 @@ export default {
         align: "left",
         sortable: false,
         value: "reportedEmployee.name",
-        //reports.reportedEmployee.name
       },
       { text: "От", value: "dateFrom" },
       { text: "До", value: "dateTo" },
@@ -141,7 +140,6 @@ export default {
       return this.editedIndex === -1
         ? "Создание нового отчёта"
         : "Редактировать";
-      
     },
   },
 
