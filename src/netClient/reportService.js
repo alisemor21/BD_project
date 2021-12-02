@@ -65,7 +65,10 @@ export async function downloadReport(id) {
           "x-access-token": localStorage.accessToken,
         },
       });
-      console.log('1111111111', response.data)
+      let blob = new Blob([response.data], { type: 'application/vnd.ms-excel' }),
+        url = window.URL.createObjectURL(blob)
+
+      window.open(url)
       return response.data;
     } catch (error) {
       console.error({ error });
