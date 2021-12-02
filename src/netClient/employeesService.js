@@ -3,7 +3,7 @@ import http from "@/netClient/config";
 export async function getAllEmployees() {
   try {
     const response = await http.get("/api/employees");
-    return response.data.employees ?? [];
+    return response.data?.employees ?? [];
   } catch (error) {
     console.error({ error });
     throw error;

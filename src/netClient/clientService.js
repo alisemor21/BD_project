@@ -80,3 +80,13 @@ export async function createContactFace(id, name, phone, email) {
       throw error;
     }
   }
+
+  export async function fetchContactFaceList() {
+    try {
+      const response = await http.get("/api/clients/contact-faces/show-all");
+      return response.data?.contactFaces ?? [];
+    } catch (error) {
+      console.error({ error });
+      throw error;
+    }
+  }

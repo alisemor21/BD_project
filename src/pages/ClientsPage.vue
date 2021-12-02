@@ -74,17 +74,14 @@
 
       <template v-slot:expanded-item="{ headers, item }">
         <td :colspan="headers.length">
-          <ul>
-            <li
-              v-for="contactFace in item.contactFaceList"
-              :key="contactFace.id">
-              <div>
-                {{ contactFace.name }} {{ contactFace.phone }}
-                {{ contactFace.email }} {{ contactFace.contactFaceStatus }}
-              </div>
-              <div
-                v-if="
-                  role === 'ADMIN' && contactFace.contactFaceStatus === 'ACTIVE'">
+          <v-list-item  
+            v-for="contactFace in item.contactFaceList"
+            :key="contactFace.id"
+          >
+              <v-list-item-content>
+                <v-list-item-title>{{contactFace.name}}  / {{contactFace.status}}</v-list-item-title>   
+              </v-list-item-content>
+              <template v-if="role === 'ADMIN' && contactFace.status === 'ACTIVE'">
                 <v-dialog v-model="dialog" persistent max-width="4000">
                   <template v-slot:activator="{ on, attrs }">
                     <v-icon dark v-bind="attrs" v-on="on" color="red">
@@ -112,9 +109,8 @@
                     </v-card-actions>
                   </v-card>
                 </v-dialog>
-              </div>
-            </li>
-          </ul>
+              </template>
+          </v-list-item>
         </td>
       </template>
     </v-data-table>

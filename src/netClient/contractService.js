@@ -64,3 +64,13 @@ export async function deleteContractById(id) {
     throw error;
   }
 }
+
+export async function fetchClientContractList(clientId) {
+  try {
+    const response = await http.get("/api/contracts/client-contracts/" + clientId);
+    return response.data?.contract ?? [];
+  } catch (error) {
+    console.error({ error });
+    throw error;
+  }
+}
