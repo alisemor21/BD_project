@@ -59,17 +59,14 @@ export async function createReport(reportedEmployeeId, dateFrom, dateTo) {
 
 export async function downloadReport(id) {
     try {
-      const response = await http.get("/api/reports/download", {
-        params: {
-          id,
-        },
+      const response = await http.get("/api/reports/download/" + id, {
         headers: {
           "Content-Type": "application/json",
           "x-access-token": localStorage.accessToken,
         },
       });
-      console.log("!!!!!!!!!!!!!!!!!!!!!!1", /*response.data,*/ response.download)
-      return response.data ?? {};
+      console.log('1111111111', response.data)
+      return response.data;
     } catch (error) {
       console.error({ error });
       throw error;
