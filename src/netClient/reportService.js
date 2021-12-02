@@ -65,7 +65,13 @@ export async function downloadReport(id) {
           "x-access-token": localStorage.accessToken,
         },
       });
-      let blob = new Blob([response.data], { type: 'application/vnd.ms-excel' }),
+
+      let json = JSON.stringify(response.data)
+      let buffer = Buffer.from(JSON.parse(json).response.data)
+      //let readUTF8 = buffer.toString('utf8')
+      //let blob = ''
+
+      let blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }),
         url = window.URL.createObjectURL(blob)
 
       window.open(url)
