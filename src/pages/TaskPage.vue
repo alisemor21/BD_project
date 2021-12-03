@@ -121,7 +121,7 @@
 											background-color="amber lighten-4"
 											color="orange orange-darken-4"
 											label="Описание задания"
-											type="type"
+											type="text"
 											required
 										></v-textarea>
 									</v-flex>
@@ -146,7 +146,7 @@
 			<v-data-table
 				:headers="headers"
 				:items="tasks"
-				item-key="name"
+				item-key="author"
 				class="elevation-1"
 				:search="search"
 			>
@@ -179,7 +179,7 @@
 
 <script>
 import {
-	// getAllTasks,
+	getAllTasks,
 	// getTaskById,
 	createTask,
 	//patchTaskById,
@@ -204,10 +204,10 @@ export default {
 				align: 'left',
 				value: 'author',
 			},
-			{ text: 'Исполнитель', value: 'executor' },
+			{ text: 'Исполнитель', value: 'employeeList.name' },
 			{ text: 'Приоритет', value: 'priority' },
 			{ text: 'Статус', value: 'status' },
-			{ text: 'Описание', value: 'type' },
+			{ text: 'Описание', value: 'description' },
 			{ text: 'Дедлайн', value: 'deadline' },
 			{ text: 'Контактное лицо', value: 'contactFaceId' },
 			{ text: 'Контракт', value: 'contractId' },
@@ -248,12 +248,22 @@ export default {
 	},
 	created() {
 		this.getCurrentUserInfo();
+		this.fetchTaskList();
 	},
 
 	methods: {
 		onSelectChanged(contactFaceId) {
 			const { clientId } = 	this.contactFaces.find(({ id }) => id === contactFaceId) ?? {};
 			this.fetchClientContractList(clientId);
+		},
+
+		async fetchTaskList(){
+			try {
+				this.tasks = await getAllTasks()
+				console.log("Tasks: ", this.tasks)
+			} catch (error) {
+				console.error({ error });
+			}
 		},
 
 		async fetchEmployeesList() {

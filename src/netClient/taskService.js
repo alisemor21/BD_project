@@ -41,13 +41,13 @@ export async function getTaskById(id) {
  * @param {*} executorId 
  * @param {*} priority 
  * @param {*} status 
- * @param {*} type 
+ * @param {*} description 
  * @param {*} deadline 
  * @param {*} contactFaceId 
  * @param {*} contractId 
  * @returns 
  */
-export async function createTask(creatorId, executorId, priority, status, type, deadline, contactFaceId, contractId) {
+export async function createTask(creatorId, executorId, priority, status, description, deadline, contactFaceId, contractId) {
   try {
     const response = await http.post("/api/tasks",
       {
@@ -55,7 +55,7 @@ export async function createTask(creatorId, executorId, priority, status, type, 
         executorId,
         priority,
         status,
-        type,
+        description,
         deadline,
         contactFaceId,
         contractId
@@ -73,7 +73,7 @@ export async function createTask(creatorId, executorId, priority, status, type, 
   }
 }
 
-export async function patchTaskById(id, creatorId, executorId, priority, status, type, deadline) {
+export async function patchTaskById(id, creatorId, executorId, priority, status, description, deadline) {
   try {
     const response = await http.patch(
       "/api/tasks/" + id,
@@ -82,7 +82,7 @@ export async function patchTaskById(id, creatorId, executorId, priority, status,
         executorId,
         priority,
         status,
-        type,
+        description,
         deadline,
       },
       {
