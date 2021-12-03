@@ -35,7 +35,7 @@
             <v-card-text>
               <v-container grid-list-md>
                 <v-layout wrap>
-                  <v-flex xs12 sm6 md6>
+                  <v-flex xs12 sm6 md6 v-if="isNotEditExecutor">
                     <v-text-field
                       v-if="currentUser"
                       v-model="editedItem.author"
@@ -46,7 +46,7 @@
                     ></v-text-field>
                   </v-flex>
 
-                  <v-flex xs12 sm6 md6>
+                  <v-flex xs12 sm6 md6 >
                     <v-select
                       v-model="editedItem.executor"
                       :items="employees"
@@ -58,7 +58,7 @@
                     ></v-select>
                   </v-flex>
 
-                  <v-flex xs12 sm6 md6>
+                  <v-flex xs12 sm6 md6 v-if="isNotEditExecutor">
                     <v-select
                       v-model="editedItem.priority"
                       :items="['LOW', 'MEDIUM', 'HIGH']"
@@ -68,7 +68,7 @@
                     ></v-select>
                   </v-flex>
 
-                  <v-flex xs12 sm6 md6>
+                  <v-flex xs12 sm6 md6 v-if="isNotEditExecutor">
                     <v-select
                       v-model="editedItem.status"
                       :items="['ACTIVE', 'INACTIVE', 'READY']"
@@ -78,7 +78,7 @@
                     ></v-select>
                   </v-flex>
 
-                  <v-flex xs12 sm12 md12>
+                  <v-flex xs12 sm12 md12 v-if="isNotEditExecutor">
                     <v-text-field
                       v-model="editedItem.deadline"
                       label="Дедлайн задания*"
@@ -87,7 +87,7 @@
                       required
                     ></v-text-field>
                   </v-flex>
-                  <v-flex xs12 sm6 md6>
+                  <v-flex xs12 sm6 md6 v-if="isNotEditExecutor">
                     <v-select
                       @change="onSelectChanged"
                       v-model="editedItem.contactFaceId"
@@ -99,7 +99,7 @@
                       required
                     ></v-select>
                   </v-flex>
-                  <v-flex xs12 sm6 md6>
+                  <v-flex xs12 sm6 md6 v-if="isNotEditExecutor">
                     <v-select
                       v-model="editedItem.contractId"
                       :items="contracts"
@@ -111,7 +111,7 @@
                     ></v-select>
                   </v-flex>
 
-                  <v-flex xs12 sm12 md12>
+                  <v-flex xs12 sm12 md12 v-if="isNotEditExecutor">
                     <v-textarea
                       v-model="editedItem.description"
                       background-color="amber lighten-4"
@@ -203,7 +203,7 @@ export default {
   data: () => ({
     role: "",
     dialog: false,
-    isEditExecutor: false,
+    isNotEditExecutor: true,
     currentUser: [],
     employees: [],
     expand: [],
@@ -376,7 +376,7 @@ export default {
     },
 
     async onModalSaveClicked() {
-        if(this.isEditExecutor) {
+        if(this.isNotEditExecutor) {
             await this.submitEditExecutor()
         }
       else if (this.editedItem?.id) {
@@ -393,6 +393,7 @@ export default {
         this.fetchEmployeesList();
         this.fetchContactFaceList();
       this.editedItem = item;
+      this.editedIndex = this.tasks.indexOf(item);
       this.dialog = true;
     },
 
@@ -420,6 +421,7 @@ export default {
 
     async submitDone(item) {
       this.editedItem = item;
+      this.editedIndex = this.tasks.indexOf(item);
       try {
         await patchStatusTaskById(this.editedItem.id);
         this.refresh();
@@ -431,7 +433,7 @@ export default {
     editExecutor(item) {
         this.fetchEmployeesList();
       this.editedItem = item;
-      this.isEditExecutor = true;
+      this.isNotEditExecutor = false;
       this.dialog = true;
     },
 
@@ -446,7 +448,7 @@ export default {
         console.error({ error });
       }
       this.dialog = false;
-      this.isEditExecutor = false;
+      this.isNotEditExecutor = true;
       this.refresh();
     }
   },

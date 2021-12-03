@@ -95,13 +95,13 @@
           </v-chip>
         </template>
 
-        <template v-if="role === 'ADMIN'" v-slot:item.edit="{ item }">
+        <template v-if="currentRole === 'ADMIN'" v-slot:item.edit="{ item }">
           <v-icon color="green darken-1" @click="editEmployeeItem(item)">
             edit
           </v-icon>
         </template>
 
-        <template v-if="role === 'ADMIN'" v-slot:item.delete="{ item }">
+        <template v-if="currentRole === 'ADMIN'" v-slot:item.delete="{ item }">
           <v-icon color="red" @click="deleteEmployeeItem(item)">
             delete
           </v-icon>
