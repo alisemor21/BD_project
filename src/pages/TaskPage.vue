@@ -269,8 +269,6 @@ export default {
     },
 
     getExecutorName(item){
-        console.log("helloo", item.employeeList)
-
         return item.employeeList[item.employeeList.length-1].name
     },
 
@@ -282,7 +280,6 @@ export default {
 
     sortTasks(task) {
         let employeeTask = task.employeeList[task.employeeList.length -1].EmployeeExecutorTask
-        console.log("мяу", employeeTask)
         if(task.creatorId == this.currentUser.id || employeeTask.executorId == this.currentUser.id){
             return task
         }
@@ -293,7 +290,6 @@ export default {
         this.allTasks = await getAllTasks();
         //this.allTasks.find(({ id ,creatorId, timeEnded }) => creatorId === this.currentUser.id && timeEnded === null) ?? {};
         this.tasks = this.allTasks.filter(this.sortTasks)
-        console.log("Tasks: ", this.tasks);
       } catch (error) {
         console.error({ error });
       }
@@ -371,7 +367,6 @@ export default {
 
       this.currentTask = item;
       confirm("Are you sure you want to delete this item?");
-      console.log("item", item.id);
       try {
         this.task = await deleteTaskById(this.currentTask.id);
         this.refresh();
