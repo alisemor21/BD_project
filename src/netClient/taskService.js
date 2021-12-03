@@ -73,6 +73,46 @@ export async function createTask(creatorId, executorId, priority, status, descri
   }
 }
 
+export async function patchExecutorTaskById(id, executorId){
+  try {
+    const response = await http.patch(
+      "/api/tasks/" + id + "/executor",
+      {
+        executorId,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "x-access-token": localStorage.accessToken,
+        },
+      }
+    );
+    return response.data ?? [];
+  } catch (error) {
+    console.error({ error });
+    throw error;
+  }
+}
+
+export async function patchStatusTaskById(id){
+  try {
+    const response = await http.patch(
+      "/api/tasks/" + id + "/status",
+      {},
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "x-access-token": localStorage.accessToken,
+        },
+      }
+    );
+    return response.data ?? [];
+  } catch (error) {
+    console.error({ error });
+    throw error;
+  }
+}
+
 export async function patchTaskById(id, creatorId, executorId, priority, status, description, deadline) {
   try {
     const response = await http.patch(
