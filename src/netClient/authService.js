@@ -48,6 +48,7 @@ export async function doLogout() {
             }
         });
         localStorage.removeItem('accessToken');
+        localStorage.removeItem('role');
         return response.data;
     } catch (error) {
         console.error({
