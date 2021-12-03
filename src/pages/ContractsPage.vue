@@ -15,8 +15,9 @@
         <v-spacer></v-spacer>
         <v-dialog v-model="dialog" max-width="600px">
           <template v-slot:activator="{ on }">
-            <template v-if="role === 'ADMIN' || role === 'MANAGER'">
+            <template>
               <v-btn
+               v-if="currentRole === 'ADMIN' || currentRole === 'MANAGER'"
                 color="light-blue accent-3"
                 dark
                 class="mb-2"
@@ -77,10 +78,16 @@
       >
         <!-- Ничего пока не делают)))) -->
         <template v-slot:item.edit="{ item }">
-          <v-icon color="green darken-1" @click="editItem(item)"> edit </v-icon>
+          <v-icon 
+          v-if="currentRole === 'ADMIN' || currentRole === 'MANAGER'"
+          color="green darken-1" 
+          @click="editItem(item)"> edit </v-icon>
         </template>
         <template v-slot:item.delete="{ item }">
-          <v-icon color="red" @click="deleteItem(item)"> delete </v-icon>
+          <v-icon 
+          v-if="currentRole === 'ADMIN' || currentRole === 'MANAGER'"
+          color="red" 
+          @click="deleteItem(item)"> delete </v-icon>
         </template>
       </v-data-table>
     </template>
@@ -98,7 +105,7 @@ import { fetchClientList, fetchClientById } from "@/netClient/clientService";
 export default {
   name: "ContractsPage",
   data: () => ({
-    role: "MANAGER",
+    role: "",
     dialog: false,
     currentUser: [],
     currentContract: [],
@@ -131,6 +138,10 @@ export default {
   computed: {
     formTitle() {
       return this.editedIndex === -1 ? "Создать" : "Редактировать";
+    },
+
+    currentRole() {
+      return localStorage.role;
     },
   },
 
