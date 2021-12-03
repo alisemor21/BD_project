@@ -99,9 +99,9 @@ export async function patchTaskById(id, creatorId, executorId, priority, status,
   }
 }
 
-export async function deleteTaskById() {
+export async function deleteTaskById(id) {
   try {
-    const response = await http.delete("/api/employees/:id", {
+    const response = await http.delete("/api/tasks/" + id, {
       headers: {
         "Contentt-Type": "application/json",
         "x-access-token": localStorage.accessToken,

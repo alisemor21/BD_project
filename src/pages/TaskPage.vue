@@ -202,9 +202,9 @@ export default {
 			{
 				text: 'Автор задания',
 				align: 'left',
-				value: 'author',
+				value: 'editedItem.author',
 			},
-			{ text: 'Исполнитель', value: 'employeeList.name' },
+			{ text: 'Исполнитель', value: 'employeeList[0].name' },
 			{ text: 'Приоритет', value: 'priority' },
 			{ text: 'Статус', value: 'status' },
 			{ text: 'Описание', value: 'description' },
@@ -216,11 +216,10 @@ export default {
 			{ text: '', value: 'delete', sortable: false },
 		],
 		tasks: [],
+		task: null,
 		contactFaces: [],
-
 		contracts: [],
-		currentTask: '',
-		task: '',
+		currentTask: [],
 		editedIndex: -1,
 		editedItem: {
 			author: '',
@@ -349,6 +348,7 @@ export default {
 
 			this.currentTask = item;
 			confirm('Are you sure you want to delete this item?');
+			console.log("item", item.id)
 			try {
 				this.task = await deleteTaskById(this.currentTask.id);
 				this.refresh();
