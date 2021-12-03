@@ -124,8 +124,8 @@ export default {
     editedItem: {
       employee: "",
       reportedEmployeeId: "",
-      dateFrom: "-",
-      dateTo: "-",
+      dateFrom: null,
+      dateTo: null,
     },
     defaultItem: {
       employee: "",
