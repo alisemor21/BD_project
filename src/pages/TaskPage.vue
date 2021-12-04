@@ -158,8 +158,10 @@
           </v-chip>
         </template>
 
-        <template v-if="currentRole === 'ADMIN' || currentRole === 'MANAGER'" v-slot:item.edit="{ item }">
-          <v-icon color="blue" @click="editItem(item)"> edit </v-icon>
+        <template v-slot:item.edit="{ item }">
+          <v-icon 
+          v-if=" currentRole === 'ADMIN' || isAuthor(item) && item.status !== 'READY'"
+          color="blue" @click="editItem(item)"> edit </v-icon>
         </template>
 
         <template  v-slot:item.editDone="{ item }">
@@ -170,6 +172,7 @@
 
         <template v-if="currentRole === 'ADMIN' || currentRole === 'MANAGER'" v-slot:item.editExecutor="{ item }">
           <v-icon
+            v-if="currentRole === 'ADMIN' || isAuthor(item)"
             color="orange"
             @click="editExecutor(item)"
           >
@@ -177,8 +180,11 @@
           </v-icon>
         </template>
 
-        <template  v-if="currentRole === 'ADMIN' || currentRole === 'MANAGER'" v-slot:item.delete="{ item }">
-          <v-icon color="red" @click="deleteItem(item)"> delete </v-icon>
+        <template  v-slot:item.delete="{ item }" >
+          <v-icon 
+          v-if="currentRole === 'ADMIN' || isAuthor(item)"
+          color="red" 
+          @click="deleteItem(item)"> delete </v-icon>
         </template>
       </v-data-table>
     </template>
@@ -204,6 +210,7 @@ export default {
     role: "",
     dialog: false,
     isNotEditExecutor: true,
+    isAuthorFlag: false,
     currentUser: [],
     employees: [],
     expand: [],
@@ -266,6 +273,14 @@ export default {
 
       refresh() {
       this.fetchTaskList();
+    },
+
+    isAuthor(item) {
+        console.log("isAuthor", item.creatorId, "alisa", this.currentUser.id)
+        if(item.creatorId == this.currentUser.id){
+            return true
+        }
+        return false
     },
 
     getExecutorName(item){

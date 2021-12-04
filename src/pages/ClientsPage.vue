@@ -79,9 +79,9 @@
             :key="contactFace.id"
           >
               <v-list-item-content>
-                <v-list-item-title>{{contactFace.name}}  / {{contactFace.status}}</v-list-item-title>   
+                <v-list-item-title>{{contactFace.name}}  / {{contactFace.contactFaceStatus}}</v-list-item-title>   
               </v-list-item-content>
-              <template v-if="role === 'ADMIN' && contactFace.status === 'ACTIVE'">
+              <template v-if="currentRole === 'ADMIN' && contactFace.contactFaceStatus === 'ACTIVE'">
                 <v-dialog v-model="dialog" persistent max-width="4000">
                   <template v-slot:activator="{ on, attrs }">
                     <v-icon dark v-bind="attrs" v-on="on" color="red">
