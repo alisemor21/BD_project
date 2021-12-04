@@ -1,21 +1,24 @@
 <template>
   <div class="all">
-    <ul>
-      <template v-if="employee">
-        <h1><li>{{this.employee.name}}</li></h1>
-        <h1><li>{{this.employee.role}}</li></h1>
-      </template>
-        
-      </ul>
-    <v-btn
-      @click="onLogoutClicked"
-      rounded
-      elevation="8"
-      color="light-blue accent-3"
-      dark
-    >
-      Выйти из аккаунта
-    </v-btn>
+    <div class="cartochka">
+      <div class="cartochka-text">
+        <template v-if="employee">
+          <h1>{{ this.employee.name }}</h1>
+          <h1>{{ this.employee.role }}</h1>
+        </template>
+      </div>
+      <div class="cartochka-btn">
+        <v-btn
+          @click="onLogoutClicked"
+          rounded
+          elevation="8"
+          color="light-blue accent-3"
+          dark
+        >
+          Выйти из аккаунта
+        </v-btn>
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -24,13 +27,13 @@ import { getMyInfo } from "@/netClient/employeesService";
 export default {
   name: "AccountPage",
   data: () => ({
-    employee: null
+    employee: null,
   }),
   created() {
-    this.showMyInfo()
+    this.showMyInfo();
   },
   methods: {
-    async showMyInfo(){
+    async showMyInfo() {
       try {
         this.employee = await getMyInfo();
       } catch (error) {
@@ -38,14 +41,43 @@ export default {
       }
     },
     async onLogoutClicked() {
-       try {
+      try {
         await doLogout();
         this.$router.push("/login");
       } catch (error) {
         console.error({ error });
       }
     },
-    
   },
 };
 </script>
+
+<style scoped>
+.all{
+  border: 1pc solid black;
+  border-radius: 3pc;
+  margin-top: 8%;
+  margin-left: 33%;
+  width: 30%;
+  min-width: 300px;
+  max-width: 450px;
+}
+.cartochka {
+  text-align: center;
+  /* border: 1pc solid black;
+  border-radius: 3pc;
+  width: 400px; */
+}
+
+.cartochka-text {
+  margin-top: 3pc;
+  margin-bottom: 3pc;
+}
+.cartochka-btn {
+  margin-bottom: 3pc;
+}
+
+.h1 {
+  margin: 10pc;
+}
+</style>
