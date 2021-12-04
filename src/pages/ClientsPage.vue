@@ -173,6 +173,13 @@ export default {
     currentClient: null,
     currentContactFace: null,
   }),
+
+  computed: {
+      currentRole() {
+        return localStorage.role;
+      },
+    },
+
   created() {
     this.fetchClients();
   },
