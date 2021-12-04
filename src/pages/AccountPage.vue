@@ -54,13 +54,14 @@ export default {
 
 <style scoped>
 .all{
-  border: 1pc solid black;
+  border: 5px solid rgb(0, 0, 0);
   border-radius: 3pc;
   margin-top: 8%;
   margin-left: 33%;
   width: 30%;
   min-width: 300px;
   max-width: 450px;
+  box-shadow: rgb(146, 141, 128) 20px 20px 20px;
 }
 .cartochka {
   text-align: center;
