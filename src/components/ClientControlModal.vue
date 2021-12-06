@@ -61,7 +61,7 @@
 						</v-flex>
 						<v-flex xs12 sm6 md6 lg6>
 							<v-text-field
-								v-model="currentClient.address"
+								v-model="currentClient.mailAdress"
 								label="Адрес"
 								color="light-blue accent-3"
 							/>
