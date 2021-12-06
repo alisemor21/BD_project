@@ -226,7 +226,7 @@ export default {
       { text: "Статус", value: "status" },
       { text: "Описание", value: "description" },
       { text: "Дедлайн", value: "deadline" },
-      { text: "Контактное лицо", value: "contactFaceId" },
+      { text: "Контактное лицо", value: "contactFace.name" },
       { text: "Контракт", value: "contractId" },
       { text: "", value: "edit", sortable: false },
       { text: "", value: "editDone", sortable: false },
@@ -305,6 +305,7 @@ export default {
         this.allTasks = await getAllTasks();
         //this.allTasks.find(({ id ,creatorId, timeEnded }) => creatorId === this.currentUser.id && timeEnded === null) ?? {};
         this.tasks = this.allTasks.filter(this.sortTasks)
+        console.log('1111111111111', this.allTasks)
       } catch (error) {
         console.error({ error });
       }
