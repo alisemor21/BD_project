@@ -39,7 +39,7 @@
         </v-chip>
       </template>
 
-      <template v-if="role === 'ADMIN'" v-slot:item.addContactFace="{ item }">
+      <template v-if="currentRole === 'ADMIN' || currentRole === 'MANAGER'" v-slot:item.addContactFace="{ item }">
         <v-icon
           @click="startCreateContactFace(item)"
           color="light-blue accent-3"
@@ -54,7 +54,7 @@
           @done="onContactFacesModalDone"
         />
       </template>
-      <template v-if="role === 'ADMIN'" v-slot:item.editClient="{ item }">
+      <template v-if="currentRole === 'ADMIN' || currentRole === 'MANAGER'" v-slot:item.editClient="{ item }">
         <v-icon
           v-if="item.status !== 'INACTIVE'"
           color="green darken-1"
@@ -63,7 +63,7 @@
           edit
         </v-icon>
       </template>
-      <template v-if="role === 'ADMIN'" v-slot:item.deleteClient="{ item }">
+      <template v-if="currentRole === 'ADMIN' || currentRole === 'MANAGER'" v-slot:item.deleteClient="{ item }">
         <v-icon
           v-if="item.status !== 'INACTIVE'"
           color="red"
