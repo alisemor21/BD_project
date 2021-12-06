@@ -103,7 +103,7 @@
                       <v-btn
                         color="red"
                         text
-                        @click="deleteContact(item.id, contactFace.id)">
+                        @click="deleteContact(item.id, contactFace.id), dialog = false">
                         Удалить
                       </v-btn>
                     </v-card-actions>
