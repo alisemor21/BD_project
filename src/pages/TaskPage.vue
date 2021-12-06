@@ -161,7 +161,7 @@
         <template v-slot:item.edit="{ item }">
           <v-icon 
           v-if=" currentRole === 'ADMIN' || isAuthor(item) && item.status !== 'READY'"
-          color="blue" @click="editItem(item)"> edit </v-icon>
+          color="blue" @click="editTaskItem(item)"> edit </v-icon>
         </template>
 
         <template  v-slot:item.editDone="{ item }">
