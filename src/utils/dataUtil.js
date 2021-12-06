@@ -13,8 +13,8 @@ const covertClientList = (clientList = []) => {
 }
 
 const covertClient = (client = {}) => {
-    const { contactFaceList, clientInfos, id, status } = client ?? {};
-    const { name, address, phone, city, email, fax, mailAdress, inn, ogrn } = clientInfos ?? {};
+    const { contactFaceList, clientInfos, id } = client ?? {};
+    const { name, address, phone, city, email, fax, mailAdress, inn, ogrn, status } = clientInfos ?? {};
     return {
         expandable: !!contactFaceList?.length,
         id,

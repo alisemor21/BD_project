@@ -81,7 +81,13 @@
 					delete
 				</v-icon>
 			</template>
-
+			<template 	v-slot:item.data-table-expand="{ expand, isExpanded, item }">
+      <template v-if="item && item.contactFaceList && item.contactFaceList.length">
+        	<v-icon @click="expand(!isExpanded)">
+					  {{ isExpanded ? 'expand_more' : 'expand_less' }}
+				  </v-icon>
+      </template>
+			</template>
 			<template v-slot:expanded-item="{ headers, item }">
 				<td :colspan="headers.length">
 					<v-list-item
@@ -89,8 +95,8 @@
 						:key="contactFace.id"
 					>
 						<v-list-item-content>
-							<v-list-item-title
-								>{{ contactFace.name }}, тел:{{
+							<v-list-item-title>
+                {{ contactFace.name }}, тел:{{
 									contactFace.phone
 								}}, еmail:{{ contactFace.email }}, статус:
 								{{
@@ -136,7 +142,12 @@
 										<v-btn
 											color="red"
 											text
-											@click="deleteContact(item.id, contactFace.id)"
+											@click="
+												deleteContact(
+													item.id,
+													contactFace.id,
+												)
+											"
 										>
 											Удалить
 										</v-btn>
