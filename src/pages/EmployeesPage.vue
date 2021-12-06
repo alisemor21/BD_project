@@ -127,7 +127,6 @@ export default {
     expand: [],
     search: "",
     headers: [
-      { text: "id", value: "id" },
       {
         name: "name",
         text: "Имя",
