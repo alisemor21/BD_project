@@ -41,7 +41,7 @@ export async function createContract(clientId, info) {
   }
 }
 
-export async function patchContractById(clientId, info, id) {
+export async function patchContractById(id, clientId, info) {
   try {
     const response = await http.patch("/api/contracts/" + id,
       {
