@@ -1,193 +1,212 @@
 <template>
   <div class="all">
     <template>
-      <v-toolbar flat color="white">
-        <v-toolbar-title>Все задания</v-toolbar-title>
-        <v-divider class="mx-3" inset vertical></v-divider>
-        <v-spacer></v-spacer>
-        <v-text-field
-          v-model="search"
-          append-icon="mdi-magnify"
-          label="Search"
-          color="light-blue accent-3"
-          hide-details
-        ></v-text-field>
-        <v-spacer></v-spacer>
-        <v-dialog v-model="dialog" max-width="500px">
-          <template v-slot:activator="{ on }">
-            <template v-if="currentRole === 'ADMIN' || currentRole === 'MANAGER'">
-              <v-btn
-                color="light-blue accent-3"
-                dark
-                class="mb-2"
-                v-on="on"
-                @click="startCreateTask"
-                >+ Создать новое задание</v-btn
+      <div>
+        <v-toolbar color="white">
+          <v-toolbar-title>Все задания</v-toolbar-title>
+          <v-divider class="mx-3" inset vertical></v-divider>
+          <v-spacer></v-spacer>
+          <v-text-field
+            v-model="search"
+            append-icon="mdi-magnify"
+            label="Search"
+            single-line
+            color="light-blue accent-3"
+            hide-details
+          ></v-text-field>
+          <v-spacer></v-spacer>
+          <v-dialog v-model="dialog" max-width="500px">
+            <template v-slot:activator="{ on }">
+              <template
+                v-if="currentRole === 'ADMIN' || currentRole === 'MANAGER'"
               >
+                <v-btn
+                  color="light-blue accent-3"
+                  dark
+                  class="mb-2"
+                  v-on="on"
+                  @click="startCreateTask"
+                  >+ Создать новое задание</v-btn
+                >
+              </template>
             </template>
+
+            <v-card>
+              <v-card-title>
+                <span class="headline">{{ formTitle }}</span>
+              </v-card-title>
+
+              <v-card-text>
+                <v-container grid-list-md>
+                  <v-layout wrap>
+                    <v-flex xs12 sm6 md6 v-if="isNotEditExecutor">
+                      <v-text-field
+                        v-if="currentUser"
+                        v-model="editedItem.author"
+                        :disabled="true"
+                        label="Автор*"
+                        color="light-blue accent-3"
+                        required
+                      ></v-text-field>
+                    </v-flex>
+
+                    <v-flex xs12 sm6 md6>
+                      <v-select
+                        v-model="editedItem.executor"
+                        :items="employees"
+                        item-text="name"
+                        item-value="id"
+                        label="Исполнитель*"
+                        color="light-blue accent-3"
+                        required
+                      ></v-select>
+                    </v-flex>
+
+                    <v-flex xs12 sm6 md6 v-if="isNotEditExecutor">
+                      <v-select
+                        v-model="editedItem.priority"
+                        :items="['LOW', 'MEDIUM', 'HIGH']"
+                        label="Приоритет выполнения*"
+                        color="light-blue accent-3"
+                        required
+                      ></v-select>
+                    </v-flex>
+
+                    <v-flex xs12 sm6 md6 v-if="isNotEditExecutor">
+                      <v-select
+                        v-model="editedItem.status"
+                        :items="['ACTIVE', 'INACTIVE', 'READY']"
+                        label="Статус*"
+                        color="light-blue accent-3"
+                        required
+                      ></v-select>
+                    </v-flex>
+
+                    <v-flex xs12 sm12 md12 v-if="isNotEditExecutor">
+                      <v-text-field
+                        v-model="editedItem.deadline"
+                        label="Дедлайн задания*"
+                        type="date"
+                        color="light-blue accent-3"
+                        required
+                      ></v-text-field>
+                    </v-flex>
+                    <v-flex xs12 sm6 md6 v-if="isNotEditExecutor">
+                      <v-select
+                        @change="onSelectChanged"
+                        v-model="editedItem.contactFaceId"
+                        :items="contactFaces"
+                        item-text="name"
+                        item-value="id"
+                        label="Контактное лицо *"
+                        color="light-blue accent-3"
+                        required
+                      ></v-select>
+                    </v-flex>
+                    <v-flex xs12 sm6 md6 v-if="isNotEditExecutor">
+                      <v-select
+                        v-model="editedItem.contractId"
+                        :items="contracts"
+                        item-text="id"
+                        item-value="id"
+                        label="Контракты контактного лица"
+                        color="light-blue accent-3"
+                        required
+                      ></v-select>
+                    </v-flex>
+
+                    <v-flex xs12 sm12 md12 v-if="isNotEditExecutor">
+                      <v-textarea
+                        v-model="editedItem.description"
+                        background-color="amber lighten-4"
+                        color="orange orange-darken-4"
+                        label="Описание задания"
+                        type="text"
+                        required
+                      ></v-textarea>
+                    </v-flex>
+                  </v-layout>
+                </v-container>
+              </v-card-text>
+
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="light-blue accent-3" @click="close"
+                  >Отменить</v-btn
+                >
+                <v-btn color="green accent-2" @click="onModalSaveClicked()"
+                  >Сохранить</v-btn
+                >
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </v-toolbar>
+        <v-data-table
+          :headers="headers"
+          :items="tasks"
+          item-key="author"
+          class="elevation-1"
+          :search="search"
+        >
+          <template v-slot:item.status="{ item }" dark>
+            <v-chip :color="getColorStatus(item.status)">
+              {{ item.status }}
+            </v-chip>
           </template>
 
-          <v-card>
-            <v-card-title>
-              <span class="headline">{{ formTitle }}</span>
-            </v-card-title>
+          <template v-slot:item.executorName="{ item }" dark>
+            {{ getExecutorName(item) }}
+          </template>
 
-            <v-card-text>
-              <v-container grid-list-md>
-                <v-layout wrap>
-                  <v-flex xs12 sm6 md6 v-if="isNotEditExecutor">
-                    <v-text-field
-                      v-if="currentUser"
-                      v-model="editedItem.author"
-                      :disabled="true"
-                      label="Автор*"
-                      color="light-blue accent-3"
-                      required
-                    ></v-text-field>
-                  </v-flex>
+          <template v-slot:item.priority="{ item }" dark>
+            <v-chip :color="getColorPriority(item.priority)">
+              {{ item.priority }}
+            </v-chip>
+          </template>
 
-                  <v-flex xs12 sm6 md6 >
-                    <v-select
-                      v-model="editedItem.executor"
-                      :items="employees"
-                      item-text="name"
-                      item-value="id"
-                      
-                      label="Исполнитель*"
-                      color="light-blue accent-3"
-                      required
-                    ></v-select>
-                  </v-flex>
+          <template v-slot:item.edit="{ item }">
+            <v-icon
+              v-if="
+                currentRole === 'ADMIN' ||
+                (isAuthor(item) && item.status !== 'READY')
+              "
+              color="blue"
+              @click="editTaskItem(item)"
+            >
+              edit
+            </v-icon>
+          </template>
 
-                  <v-flex xs12 sm6 md6 v-if="isNotEditExecutor">
-                    <v-select
-                      v-model="editedItem.priority"
-                      :items="['LOW', 'MEDIUM', 'HIGH']"
-                      label="Приоритет выполнения*"
-                      color="light-blue accent-3"
-                      required
-                    ></v-select>
-                  </v-flex>
+          <template v-slot:item.editDone="{ item }">
+            <v-icon color="green darken-1" @click="submitDone(item)">
+              check_circle_outline
+            </v-icon>
+          </template>
 
-                  <v-flex xs12 sm6 md6 v-if="isNotEditExecutor">
-                    <v-select
-                      v-model="editedItem.status"
-                      :items="['ACTIVE', 'INACTIVE', 'READY']"
-                      label="Статус*"
-                      color="light-blue accent-3"
-                      required
-                    ></v-select>
-                  </v-flex>
-
-                  <v-flex xs12 sm12 md12 v-if="isNotEditExecutor">
-                    <v-text-field
-                      v-model="editedItem.deadline"
-                      label="Дедлайн задания*"
-                      type="date"
-                      color="light-blue accent-3"
-                      required
-                    ></v-text-field>
-                  </v-flex>
-                  <v-flex xs12 sm6 md6 v-if="isNotEditExecutor">
-                    <v-select
-                      @change="onSelectChanged"
-                      v-model="editedItem.contactFaceId"
-                      :items="contactFaces"
-                      item-text="name"
-                      item-value="id"
-                      label="Контактное лицо *"
-                      color="light-blue accent-3"
-                      required
-                    ></v-select>
-                  </v-flex>
-                  <v-flex xs12 sm6 md6 v-if="isNotEditExecutor">
-                    <v-select
-                      v-model="editedItem.contractId"
-                      :items="contracts"
-                      item-text="id"
-                      item-value="id"
-                      label="Контракты контактного лица"
-                      color="light-blue accent-3"
-                      required
-                    ></v-select>
-                  </v-flex>
-
-                  <v-flex xs12 sm12 md12 v-if="isNotEditExecutor">
-                    <v-textarea
-                      v-model="editedItem.description"
-                      background-color="amber lighten-4"
-                      color="orange orange-darken-4"
-                      label="Описание задания"
-                      type="text"
-                      required
-                    ></v-textarea>
-                  </v-flex>
-                </v-layout>
-              </v-container>
-            </v-card-text>
-
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="light-blue accent-3" @click="close">Отменить</v-btn>
-              <v-btn color="green accent-2" @click=" onModalSaveClicked()"
-                >Сохранить</v-btn
-              >
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-      </v-toolbar>
-      <v-data-table
-        :headers="headers"
-        :items="tasks"
-        item-key="author"
-        class="elevation-1"
-        :search="search"
-      >
-        <template v-slot:item.status="{ item }" dark>
-          <v-chip :color="getColorStatus(item.status)">
-            {{ item.status }}
-          </v-chip>
-        </template>
-
-        <template v-slot:item.executorName="{ item }" dark>
-          {{ getExecutorName(item) }}
-        </template>
-
-        <template v-slot:item.priority="{ item }" dark>
-          <v-chip :color="getColorPriority(item.priority)">
-            {{ item.priority }}
-          </v-chip>
-        </template>
-
-        <template v-slot:item.edit="{ item }">
-          <v-icon 
-          v-if=" currentRole === 'ADMIN' || isAuthor(item) && item.status !== 'READY'"
-          color="blue" @click="editTaskItem(item)"> edit </v-icon>
-        </template>
-
-        <template  v-slot:item.editDone="{ item }">
-          <v-icon color="green darken-1" @click="submitDone(item)">
-            check_circle_outline
-          </v-icon>
-        </template>
-
-        <template v-if="currentRole === 'ADMIN' || currentRole === 'MANAGER'" v-slot:item.editExecutor="{ item }">
-          <v-icon
-            v-if="currentRole === 'ADMIN' || isAuthor(item)"
-            color="orange"
-            @click="editExecutor(item)"
+          <template
+            v-if="currentRole === 'ADMIN' || currentRole === 'MANAGER'"
+            v-slot:item.editExecutor="{ item }"
           >
-            manage_accounts
-          </v-icon>
-        </template>
+            <v-icon
+              v-if="currentRole === 'ADMIN' || isAuthor(item)"
+              color="orange"
+              @click="editExecutor(item)"
+            >
+              manage_accounts
+            </v-icon>
+          </template>
 
-        <template  v-slot:item.delete="{ item }" >
-          <v-icon 
-          v-if="currentRole === 'ADMIN' || isAuthor(item)"
-          color="red" 
-          @click="deleteItem(item)"> delete </v-icon>
-        </template>
-      </v-data-table>
+          <template v-slot:item.delete="{ item }">
+            <v-icon
+              v-if="currentRole === 'ADMIN' || isAuthor(item)"
+              color="red"
+              @click="deleteItem(item)"
+            >
+              delete
+            </v-icon>
+          </template>
+        </v-data-table>
+      </div>
     </template>
   </div>
 </template>
@@ -237,7 +256,7 @@ export default {
     currentTask: [],
     editedIndex: -1,
     editedItem: {
-        id: "",
+      id: "",
       author: "",
       executor: "",
       priority: "LOW",
@@ -257,7 +276,7 @@ export default {
      * CHECK THIS
      */
     currentRole() {
-        //this.role = localStorage.role
+      //this.role = localStorage.role
       return localStorage.role;
     },
   },
@@ -266,21 +285,20 @@ export default {
     this.fetchTaskList();
   },
   methods: {
-
-      refresh() {
+    refresh() {
       this.fetchTaskList();
     },
 
     isAuthor(item) {
-        console.log("isAuthor", item.creatorId, "alisa", this.currentUser.id)
-        if(item.creatorId == this.currentUser.id){
-            return true
-        }
-        return false
+      console.log("isAuthor", item.creatorId, "alisa", this.currentUser.id);
+      if (item.creatorId == this.currentUser.id) {
+        return true;
+      }
+      return false;
     },
 
-    getExecutorName(item){
-        return item.employeeList[item.employeeList.length-1].name
+    getExecutorName(item) {
+      return item.employeeList[item.employeeList.length - 1].name;
     },
 
     onSelectChanged(contactFaceId) {
@@ -290,18 +308,21 @@ export default {
     },
 
     sortTasks(task) {
-        let employeeTask = task.employeeList[task.employeeList.length -1].EmployeeExecutorTask
-        if(task.creatorId == this.currentUser.id || employeeTask.executorId == this.currentUser.id){
-            return task
-        }
+      let employeeTask =
+        task.employeeList[task.employeeList.length - 1].EmployeeExecutorTask;
+      if (
+        task.creatorId == this.currentUser.id ||
+        employeeTask.executorId == this.currentUser.id
+      ) {
+        return task;
+      }
     },
 
     async fetchTaskList() {
       try {
         this.allTasks = await getAllTasks();
         //this.allTasks.find(({ id ,creatorId, timeEnded }) => creatorId === this.currentUser.id && timeEnded === null) ?? {};
-        this.tasks = this.allTasks.filter(this.sortTasks)
-        
+        this.tasks = this.allTasks.filter(this.sortTasks);
       } catch (error) {
         console.error({ error });
       }
@@ -376,7 +397,6 @@ export default {
       this.dialog = true;
     },
     async deleteItem(item) {
-
       this.currentTask = item;
       confirm("Are you sure you want to delete this item?");
       try {
@@ -395,10 +415,9 @@ export default {
     },
 
     async onModalSaveClicked() {
-        if(!this.isNotEditExecutor) {
-            await this.submitEditExecutor()
-        }
-      else if (this.editedItem?.id) {
+      if (!this.isNotEditExecutor) {
+        await this.submitEditExecutor();
+      } else if (this.editedItem?.id) {
         await this.submitEditTask();
       } else {
         await this.submitCreateTask();
@@ -409,31 +428,30 @@ export default {
     },
 
     editTaskItem(item) {
-        this.fetchEmployeesList();
-        this.fetchContactFaceList();
+      this.fetchEmployeesList();
+      this.fetchContactFaceList();
       this.editedItem = item;
       this.editedIndex = this.tasks.indexOf(item);
       this.dialog = true;
     },
 
-    async submitEditTask(){
-        try {
-            await patchTaskById(
-                this.editedItem.id,
-                this.editedItem.priority,
-                this.editedItem.status,
-                this.editedItem.description,
-                this.editedItem.deadline,
-                this.editedItem.contactFaceId,
-                this.editedItem.contractId
-                );
-            this.refresh();
-        } catch (error) {
-            console.error({ error });
-        }
-        this.dialog = false;
+    async submitEditTask() {
+      try {
+        await patchTaskById(
+          this.editedItem.id,
+          this.editedItem.priority,
+          this.editedItem.status,
+          this.editedItem.description,
+          this.editedItem.deadline,
+          this.editedItem.contactFaceId,
+          this.editedItem.contractId
+        );
         this.refresh();
-        
+      } catch (error) {
+        console.error({ error });
+      }
+      this.dialog = false;
+      this.refresh();
     },
 
     async submitDone(item) {
@@ -448,7 +466,7 @@ export default {
     },
 
     editExecutor(item) {
-        this.fetchEmployeesList();
+      this.fetchEmployeesList();
       this.editedItem = item;
       this.isNotEditExecutor = false;
       this.dialog = true;
@@ -457,8 +475,8 @@ export default {
     async submitEditExecutor() {
       try {
         await patchExecutorTaskById(
-            this.editedItem.id,
-          this.editedItem.executor,
+          this.editedItem.id,
+          this.editedItem.executor
         );
         this.refresh();
       } catch (error) {
@@ -467,7 +485,7 @@ export default {
       this.dialog = false;
       this.isNotEditExecutor = true;
       this.refresh();
-    }
+    },
   },
 };
 </script>
