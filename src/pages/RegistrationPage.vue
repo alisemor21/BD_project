@@ -55,7 +55,6 @@
 </template>
 
 <script>
-// import SignIn from "@/components/SignIn";
 import { doLogin } from "@/netClient/authService";
 export default {
   name: "RegistrationPage",
@@ -63,15 +62,11 @@ export default {
     login: '',
     password: '',
   }),
-  components: {
-    // SignIn
-  },
   async mounted() {},
   methods: {
     async onSubmit() {
       try {
         const token = await doLogin(this.login.trim(), this.password.trim());
-        console.warn({ token });
         if (token) {
           this.$router.push("/");
         }
