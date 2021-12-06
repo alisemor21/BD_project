@@ -113,11 +113,13 @@ export async function patchStatusTaskById(id){
   }
 }
 
-export async function patchTaskById(id, priority, status, description, deadline) {
+export async function patchTaskById(id, contactFaceId, contractId,  priority, status, description, deadline) {
   try {
     const response = await http.patch(
       "/api/tasks/" + id,
       {
+        contactFaceId,
+        contractId,
         priority,
         status,
         description,
