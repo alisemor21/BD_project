@@ -52,7 +52,7 @@
                       :items="employees"
                       item-text="name"
                       item-value="id"
-                      :disabled="isNotEditExecutor"
+                      
                       label="Исполнитель*"
                       color="light-blue accent-3"
                       required
