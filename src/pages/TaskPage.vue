@@ -216,11 +216,6 @@ export default {
     expand: [],
     search: "",
     headers: [
-      {
-        text: "Автор задания",
-        align: "left",
-        value: "editedItem.author",
-      },
       { text: "Исполнитель", value: "executorName" },
       { text: "Приоритет", value: "priority" },
       { text: "Статус", value: "status" },
