@@ -420,7 +420,6 @@ export default {
         try {
             await patchTaskById(
                 this.editedItem.id,
-                this.currentUser.id,
                 this.editedItem.priority,
                 this.editedItem.status,
                 this.editedItem.description,
