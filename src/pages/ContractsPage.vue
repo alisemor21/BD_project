@@ -62,7 +62,7 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="light-blue accent-3" @click="close">Отменить</v-btn>
-              <v-btn color="green accent-2" @click="onModalSaveClicked(item)"
+              <v-btn color="green accent-2" @click="onModalSaveClicked"
                 >Сохранить</v-btn
               >
             </v-card-actions>
@@ -126,6 +126,7 @@ export default {
     contracts: [],
     editedIndex: -1,
     editedItem: {
+      id: "",
       clientId: "",
       clientName: "Клиент",
       info: "",
@@ -199,6 +200,7 @@ export default {
     startCreateContract() {
 
     },
+
 
     async submitCreateContract() {
       this.clients.forEach((element) => {

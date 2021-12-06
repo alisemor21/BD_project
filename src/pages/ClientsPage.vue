@@ -79,7 +79,7 @@
             :key="contactFace.id"
           >
               <v-list-item-content>
-                <v-list-item-title>{{contactFace.name}}  / {{contactFace.contactFaceStatus}}</v-list-item-title>   
+                <v-list-item-title>{{contactFace.name}}, тел:{{contactFace.phone}},  еmail:{{contactFace.email}}, статус: {{contactFace.contactFaceStatus}}</v-list-item-title>   
               </v-list-item-content>
               <template v-if="currentRole === 'ADMIN' && contactFace.contactFaceStatus === 'ACTIVE'">
                 <v-dialog v-model="dialog" persistent max-width="4000">

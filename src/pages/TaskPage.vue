@@ -52,6 +52,7 @@
                       :items="employees"
                       item-text="name"
                       item-value="id"
+                      :disabled="isNotEditExecutor"
                       label="Исполнитель*"
                       color="light-blue accent-3"
                       required
@@ -128,7 +129,7 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="light-blue accent-3" @click="close">Отменить</v-btn>
-              <v-btn color="green accent-2" @click=" onModalSaveClicked(item)"
+              <v-btn color="green accent-2" @click=" onModalSaveClicked()"
                 >Сохранить</v-btn
               >
             </v-card-actions>
@@ -216,11 +217,6 @@ export default {
     expand: [],
     search: "",
     headers: [
-      {
-        text: "Автор задания",
-        align: "left",
-        value: "editedItem.author",
-      },
       { text: "Исполнитель", value: "executorName" },
       { text: "Приоритет", value: "priority" },
       { text: "Статус", value: "status" },
@@ -305,7 +301,7 @@ export default {
         this.allTasks = await getAllTasks();
         //this.allTasks.find(({ id ,creatorId, timeEnded }) => creatorId === this.currentUser.id && timeEnded === null) ?? {};
         this.tasks = this.allTasks.filter(this.sortTasks)
-        console.log('1111111111111', this.allTasks)
+        
       } catch (error) {
         console.error({ error });
       }
@@ -424,8 +420,6 @@ export default {
         try {
             await patchTaskById(
                 this.editedItem.id,
-                this.currentUser.id,
-                this.editedItem.executor,
                 this.editedItem.priority,
                 this.editedItem.status,
                 this.editedItem.description,
