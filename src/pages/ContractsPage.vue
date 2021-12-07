@@ -1,7 +1,7 @@
 <template>
   <div class="all">
     <template>
-      <v-toolbar flat color="white">
+      <v-toolbar color="white">
         <v-toolbar-title>Все контракты</v-toolbar-title>
         <v-divider class="mx-3" inset vertical></v-divider>
         <v-spacer></v-spacer>
