@@ -356,10 +356,14 @@ export default {
     async fetchActiveClients() {
       try {
         let clientsList = await fetchClientList();
+        console.log(clientsList[0].contactFaceList)
         clientsList.forEach((element) => {
-          if(element.status == "CURRENT"){
-            this.contactFaceActiveList.push(element);
-          }
+          element.contactFaceList.forEach(contactFace => {
+            if(contactFace.contactFaceStatus == "ACTIVE"){
+            this.contactFaceActiveList.push(contactFace);
+          }  
+          });
+          
         });
       } catch (error) {
         console.error({ error });
