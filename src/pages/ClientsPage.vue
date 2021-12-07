@@ -217,6 +217,7 @@ export default {
         console.error({ error });
       }
     },
+
     async deleteClientById(id) {
       try {
         await deleteClientById(id);

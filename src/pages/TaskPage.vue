@@ -92,7 +92,7 @@
                     <v-select
                       @change="onSelectChanged"
                       v-model="editedItem.contactFaceId"
-                      :items="contactFaces"
+                      :items="contactFaceActiveList"
                       item-text="name"
                       item-value="id"
                       label="Контактное лицо *"
@@ -202,7 +202,7 @@ import {
   patchTaskById,
   deleteTaskById,
 } from "@/netClient/taskService";
-import { fetchContactFaceList } from "@/netClient/clientService";
+import { fetchContactFaceList, fetchClientList } from "@/netClient/clientService";
 import { fetchClientContractList } from "@/netClient/contractService";
 import { getAllEmployees, getMyInfo } from "@/netClient/employeesService";
 export default {
@@ -233,6 +233,7 @@ export default {
     allTasks: [],
     task: null,
     contactFaces: [],
+    contactFaceActiveList: [],
     contracts: [],
     currentTask: [],
     editedIndex: -1,
@@ -331,6 +332,22 @@ export default {
         console.error({ error });
       }
     },
+
+    async fetchActiveClients() {
+      try {
+        let clientsList = await fetchClientList();
+        console.log("CLIENTLIST", clientsList);
+        clientsList.forEach((element) => {
+          if(element.status == "CURRENT"){
+            console.log("STATUS", element.status);
+            this.contactFaceActiveList.push(element);
+          }
+        });
+      } catch (error) {
+        console.error({ error });
+      }
+    },
+
     async fetchClientContractList(clientId) {
       try {
         this.contracts = await fetchClientContractList(clientId);
@@ -341,6 +358,7 @@ export default {
     startCreateTask() {
       this.fetchEmployeesList();
       this.fetchContactFaceList();
+      this.fetchActiveClients();
     },
     async submitCreateTask() {
       try {
@@ -411,6 +429,7 @@ export default {
     editTaskItem(item) {
         this.fetchEmployeesList();
         this.fetchContactFaceList();
+        this.fetchActiveClients();
       this.editedItem = item;
       this.editedIndex = this.tasks.indexOf(item);
       this.dialog = true;
