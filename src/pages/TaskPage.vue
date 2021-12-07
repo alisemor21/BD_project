@@ -291,7 +291,6 @@ export default {
     },
 
     isAuthor(item) {
-      console.log("isAuthor", item.creatorId, "alisa", this.currentUser.id);
       if (item.creatorId == this.currentUser.id) {
         return true;
       }
@@ -357,10 +356,8 @@ export default {
     async fetchActiveClients() {
       try {
         let clientsList = await fetchClientList();
-        console.log("CLIENTLIST", clientsList);
         clientsList.forEach((element) => {
           if(element.status == "CURRENT"){
-            console.log("STATUS", element.status);
             this.contactFaceActiveList.push(element);
           }
         });

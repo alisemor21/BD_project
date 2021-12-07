@@ -183,9 +183,10 @@ export default {
     headers: [
       { text: "Cтатус", value: "status" },
       { text: "Имя", value: "name", align: "left" },
+      {text: "Город", value: "city"},
       { text: "ИНН", value: "inn", sortable: false },
-      // { text: 'Email', value: 'email', sortable: false },
-      // { text: 'Телефон', value: 'phone', sortable: false },
+      { text: 'Email', value: 'email', sortable: false },
+      { text: 'Телефон', value: 'phone', sortable: false },
       // { text: 'Город', value: 'city', sortable: false },
       // { text: 'fax', value: 'fax', sortable: false },
       // { text: 'Адрес', value: 'mailAdress', sortable: false },
