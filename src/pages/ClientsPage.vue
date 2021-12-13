@@ -44,6 +44,7 @@
         v-slot:item.addContactFace="{ item }"
       >
         <v-icon
+          v-if="item.status !== 'INACTIVE'"
           @click="startCreateContactFace(item)"
           color="light-blue accent-3"
           dark
