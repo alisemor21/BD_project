@@ -312,7 +312,7 @@ export default {
         task.employeeList[task.employeeList.length - 1].EmployeeExecutorTask;
       if (
         task.creatorId == this.currentUser.id ||
-        employeeTask.executorId == this.currentUser.id
+        employeeTask.executorId == this.currentUser.id || localStorage.role == 'ADMIN'
       ) {
         return task;
       }
