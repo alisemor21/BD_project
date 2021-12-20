@@ -136,7 +136,7 @@ export default {
       inn: "",
       status: "",
       city: "",
-      address: "",
+      mailAdress: "",
       phone: "",
       email: "",
       fax: "",
@@ -169,20 +169,11 @@ export default {
     formValid() {
       const baseFields = Boolean(
         this.currentClient?.name?.trim()?.length &&
-          this.currentClient?.inn?.trim()?.length &&
-          this.currentClient?.city?.trim()?.length &&
-          this.currentClient?.email?.trim()?.length &&
-          this.currentClient?.phone?.trim()?.length &&
-          this.currentClient?.address?.trim()?.length
-      );
-      console.warn({ baseFields });
-      console.warn(
-        this.currentClient?.name?.trim()?.length,
-        this.currentClient?.inn?.trim()?.length,
-        this.currentClient?.city?.trim()?.length,
-        this.currentClient?.email?.trim()?.length,
-        this.currentClient?.phone?.trim()?.length,
-        this.currentClient?.address?.trim()?.length
+        this.currentClient?.inn?.trim()?.length &&
+        this.currentClient?.city?.trim()?.length &&
+        this.currentClient?.email?.trim()?.length &&
+        this.currentClient?.phone?.trim()?.length &&
+        this.currentClient?.mailAdress?.trim()?.length
       );
       return this.showCompanyFields
         ? baseFields && !!this.currentClient?.ogrn?.trim()?.length
