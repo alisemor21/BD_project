@@ -14,7 +14,7 @@
         ></v-text-field>
         <v-spacer></v-spacer>
         <v-btn
-		v-if="currentRole === 'ADMIN' || currentRole === 'MANAGER'"
+          v-if="currentRole === 'ADMIN' || currentRole === 'MANAGER'"
           color="light-blue accent-3"
           dark
           class="mb-2"
@@ -75,7 +75,11 @@
               <v-btn color="light-blue accent-3" @click="onModalCloseClicked">
                 Отменить
               </v-btn>
-              <v-btn color="green accent-2" @click="onModalSaveClicked">
+              <v-btn
+                color="green accent-2"
+                :disabled="!formValid"
+                @click="onModalSaveClicked"
+              >
                 Сохранить
               </v-btn>
             </v-card-actions>
@@ -165,8 +169,17 @@ export default {
       return this.editedIndex === -1 ? "Создать" : "Редактировать";
     },
 
-	currentRole() {
+    currentRole() {
       return localStorage.role;
+    },
+    formValid() {
+      const baseFields = Boolean(
+        this.currentEmployeeItem?.name?.trim()?.length &&
+          this.currentEmployeeItem?.login?.trim()?.length &&
+            this.currentEmployeeItem?.password?.trim()?.length &&
+              this.currentEmployeeItem?.role?.trim()?.length
+      );
+      return baseFields;
     },
   },
 

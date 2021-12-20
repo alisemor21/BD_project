@@ -8,9 +8,9 @@ COPY package.json ./
 
 RUN npm install
 
-COPY . .
+COPY . . 
+# копи конкретные файлы, ноду конкретную
 
 RUN npm run build
 
-EXPOSE 8080
 CMD [ "http-server", "dist" ]
