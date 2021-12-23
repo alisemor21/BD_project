@@ -92,15 +92,15 @@
                       ></v-text-field>
                     </v-flex>
 
-                    <v-flex xs12 sm12 md12>
+                    <!-- <v-flex xs12 sm12 md12>
                       <v-text-field
                         v-model="editedItem.timer"
                         label="Таймер*"
-                        type="integer"
+                        type="date"
                         color="light-blue accent-3"
                         required
                       ></v-text-field>
-                    </v-flex>
+                    </v-flex> -->
 
                     <v-flex xs12 sm6 md6 v-if="isNotEditExecutor">
                       <v-select
@@ -176,16 +176,13 @@
           </template>
 
           <template v-slot:item.timer="{ item }">
-            <v-chip v-if="item.priority === 'HIGH'">
-              {{ currentTime }}
+            <v-chip v-if="item.priority === 'HIGH' && item.deadline !== null">
+              {{ getTime(item) }}
             </v-chip>
           </template>
 
           <template v-slot:item.bomb="{ item }">
-            <v-icon
-              color="red"
-              @click="blackList(item)"
-            >
+            <v-icon color="red" @click="blackList(item)">
               remove_circle
             </v-icon>
           </template>
@@ -241,7 +238,6 @@
 import {
   getAllTasks,
   patchStatusTaskById,
-  blockClient,
   patchExecutorTaskById,
   // getTaskById,
   createTask,
@@ -257,7 +253,11 @@ import { getAllEmployees, getMyInfo } from "@/netClient/employeesService";
 export default {
   name: "TaskPage",
   data: () => ({
-    currentTime: 1580558031264,
+    interval: null,
+    lastDate: null,
+    time: null,
+    currentTime: null,
+    lost: null,
     timer: null,
     role: "",
     dialog: false,
@@ -305,8 +305,12 @@ export default {
   }),
   mounted() {
     this.startTimer();
+    this.fetchTaskList();
+    
+    
   },
   computed: {
+
     formTitle() {
       return this.editedIndex === -1 ? "Создать" : "Редактировать";
     },
@@ -321,16 +325,56 @@ export default {
   created() {
     this.getCurrentUserInfo();
     this.fetchTaskList();
+    this.getTime();
   },
   methods: {
+    getTime(item) {
+      let lastDate
+      this.interval = setInterval(() => {
+        
+        // this.time = Intl.DateTimeFormat(navigator.language, {
+        //   hour: "numeric",
+        //   minute: "numeric",
+        //   second: "numeric",
+        // }).format();
+
+        // item.deadline = Intl.DateTimeFormat(navigator.language, {
+        //   hour: "numeric",
+        //   minute: "numeric",
+        //   second: "numeric",
+        // }).format();
+
+        // this.lost = this.time - item.deadline;
+
+        // lastDate = new Date() - item.deadline
+
+        this.fetchTaskList();
+        lastDate = item.deadline - new Date()
+
+
+      }, 1000);
+      // let last = (new Date() - item.deadline).toLocaleString(navigator.language,{
+      //     hour: "numeric",
+      //     minute: "numeric",
+      //     second: "numeric",
+      //   })
+      // console.log(item.deadline)
+
+
+      lastDate = new Date(item.deadline) - new Date()
+
+      // return (moment(item.deadline, 'YYYY.MM.DD HH:mm').diff(moment(new Date(), 'YYYY.MM.DD HH:mm'), "days"))
+    
+      //return(this.lost)
+      return (lastDate) 
+    },
+
     startTimer() {
       this.timer = setInterval(() => {
         // this.currentTime = this.currentTime-10000000;
-        this.currentTime --
-        // this.currentTime = (new Date(this.currentTime)).toLocaleDateString() 
+        this.currentTime--;
+        // this.currentTime = (new Date(this.currentTime)).toLocaleDateString()
       }, 1000);
-      
-  
     },
     stopTimer() {
       clearTimeout(this.timer);
@@ -529,17 +573,6 @@ export default {
       this.editedIndex = this.tasks.indexOf(item);
       try {
         await patchStatusTaskById(this.editedItem.id);
-        this.refresh();
-      } catch (error) {
-        console.error({ error });
-      }
-    },
-
-    async blackList(item) {
-      this.editedItem = item;
-      this.editedIndex = this.tasks.indexOf(item);
-      try {
-        await blockClient(this.editedItem.id);
         this.refresh();
       } catch (error) {
         console.error({ error });
