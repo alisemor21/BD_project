@@ -182,7 +182,10 @@
           </template>
 
           <template v-slot:item.bomb="{ item }">
-            <v-icon color="red" @click="blackList(item)">
+            <v-icon
+              color="red"
+              @click="deniedTask(item)"
+            >
               remove_circle
             </v-icon>
           </template>
@@ -238,6 +241,8 @@
 import {
   getAllTasks,
   patchStatusTaskById,
+  //blackListClient,
+  deniedTask,
   patchExecutorTaskById,
   // getTaskById,
   createTask,
@@ -573,6 +578,17 @@ export default {
       this.editedIndex = this.tasks.indexOf(item);
       try {
         await patchStatusTaskById(this.editedItem.id);
+        this.refresh();
+      } catch (error) {
+        console.error({ error });
+      }
+    },
+
+    async deniedTask(item) {
+      this.editedItem = item;
+      this.editedIndex = this.tasks.indexOf(item);
+      try {
+        await deniedTask(this.editedItem.id);
         this.refresh();
       } catch (error) {
         console.error({ error });

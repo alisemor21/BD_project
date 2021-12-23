@@ -113,25 +113,6 @@ export async function patchStatusTaskById(id){
   }
 }
 
-// export async function blockClient(id){
-//   try {
-//     const response = await http.patch(
-//       "/api/tasks/" + id + "/status",
-//       {},
-//       {
-//         headers: {
-//           "Content-Type": "application/json",
-//           "x-access-token": localStorage.accessToken,
-//         },
-//       }
-//     );
-//     return response.data ?? [];
-//   } catch (error) {
-//     console.error({ error });
-//     throw error;
-//   }
-// }
-
 
 
 
@@ -165,6 +146,21 @@ export async function patchTaskById(id, priority, status, description, deadline,
 export async function deleteTaskById(id) {
   try {
     const response = await http.delete("/api/tasks/" + id, {
+      headers: {
+        "Contentt-Type": "application/json",
+        "x-access-token": localStorage.accessToken,
+      },
+    });
+    return response.data ?? [];
+  } catch (error) {
+    console.error({ error });
+    throw error;
+  }
+}
+
+export async function deniedTask(id) {
+  try {
+    const response = await http.patch("/api/tasks/" + id + '/denied', {
       headers: {
         "Contentt-Type": "application/json",
         "x-access-token": localStorage.accessToken,

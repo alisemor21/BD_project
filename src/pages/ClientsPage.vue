@@ -60,10 +60,22 @@
       </template>
       <template
         v-if="currentRole === 'ADMIN' || currentRole === 'MANAGER'"
+        v-slot:item.deniedClient="{ item }"
+      >
+        <v-icon
+          v-if="item.denied > 2 && item.status !== 'INACTIVE' && item.status !== 'BLOCKED'"
+          color="red"
+          @click="blackList(item)"
+        >
+          block
+        </v-icon>
+      </template>
+      <template
+        v-if="currentRole === 'ADMIN' || currentRole === 'MANAGER'"
         v-slot:item.editClient="{ item }"
       >
         <v-icon
-          v-if="item.status !== 'INACTIVE'"
+          v-if="item.status !== 'INACTIVE' || item.status !== 'BLOCKED'"
           color="green darken-1"
           @click="startEditClient(item)"
         >
@@ -156,6 +168,7 @@ import ContactFaceControlModal from "@/components/ContactFaceControlModal";
 import {
   deleteClientById,
   fetchClientList,
+  blackListClient,
   deleteContactFaceById,
 } from "@/netClient/clientService";
 import { getCLientEnumColor, getEnumLabel } from "@/utils/enumUtil";
@@ -193,6 +206,7 @@ export default {
       // { text: 'Адрес', value: 'mailAdress', sortable: false },
       // { text: 'ОГРН', value: 'ogrn', sortable: false },
       { text: "", value: "addContactFace", sortable: false },
+      { text: "", value: "deniedClient", sortable: false },
       { text: "", value: "editClient", sortable: false },
       { text: "", value: "deleteClient", sortable: false },
     ],
@@ -215,6 +229,7 @@ export default {
     async fetchClients() {
       try {
         this.clientsList = await fetchClientList();
+        console.warn(this.clientsList)
       } catch (error) {
         console.error({ error });
       }
@@ -246,6 +261,15 @@ export default {
       this.$nextTick(() => {
         this.$refs.clientControlModal.openModal(client.id);
       });
+    },
+    async blackList(item) {
+      this.currentClient = item;
+      try {
+        await blackListClient(this.currentClient.id);
+        this.fetchClients();
+      } catch (error) {
+        console.error({ error });
+      }
     },
 
     onClientModalSuccess() {
