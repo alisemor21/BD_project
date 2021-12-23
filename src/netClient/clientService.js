@@ -46,7 +46,7 @@ export async function deleteClientById(id) {
     }
 }
 
-export async function deleteClientById(id) {
+export async function blackListClient(id) {
   try {
       const response = await http.patch("/api/clients/" + id + '/black-list');
       return response.data ?? {};

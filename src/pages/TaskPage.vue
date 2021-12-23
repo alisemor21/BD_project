@@ -241,7 +241,7 @@
 import {
   getAllTasks,
   patchStatusTaskById,
-  blockClient,
+  blackListClient,
   patchExecutorTaskById,
   // getTaskById,
   createTask,
@@ -539,7 +539,7 @@ export default {
       this.editedItem = item;
       this.editedIndex = this.tasks.indexOf(item);
       try {
-        await blockClient(this.editedItem.id);
+        await blackListClient(this.editedItem.id);
         this.refresh();
       } catch (error) {
         console.error({ error });
