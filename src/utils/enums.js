@@ -1,7 +1,8 @@
 const CLIENT_STATUSES = {
     'CURRENT': 'Активный',
     'FUTURE': 'Будущий',
-    'INACTIVE': 'Неактивен'
+    'INACTIVE': 'Неактивен',
+    'BLOCKED': 'Заблокирован'
 }
   
   const CONTACT_FACE_STATUS = {

@@ -8,6 +8,8 @@ const getCLientEnumColor = (code) => {
             return 'grey lighten-1';
         case 'FUTURE':
             return 'cyan accent-1';
+        case 'BLOCKED':
+            return 'red';
         default:
             return 'green accent-2';
     }

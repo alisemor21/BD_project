@@ -201,6 +201,7 @@ export default {
       }
       this.dialog = true;
     },
+    
     async fetchClient() {
       try {
         await patchClientById();
