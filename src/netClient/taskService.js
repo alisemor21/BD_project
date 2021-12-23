@@ -153,3 +153,18 @@ export async function deleteTaskById(id) {
     throw error;
   }
 }
+
+export async function deniedTask(id) {
+  try {
+    const response = await http.patch("/api/tasks/" + id + '/denied', {
+      headers: {
+        "Contentt-Type": "application/json",
+        "x-access-token": localStorage.accessToken,
+      },
+    });
+    return response.data ?? [];
+  } catch (error) {
+    console.error({ error });
+    throw error;
+  }
+}

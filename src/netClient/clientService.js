@@ -46,6 +46,16 @@ export async function deleteClientById(id) {
     }
 }
 
+export async function deleteClientById(id) {
+  try {
+      const response = await http.patch("/api/clients/" + id + '/black-list');
+      return response.data ?? {};
+  } catch (error) {
+      console.error({ error });
+      throw error;
+  }
+}
+
 export async function fetchClientById(id) {
     try {
         const response = await http.get("/api/clients/" + id);    
@@ -70,6 +80,7 @@ export async function createContactFace(id, name, phone, email) {
       throw error;
     }
   }
+
   
   export async function deleteContactFaceById(clientId, contactFaceId) {
     try {
