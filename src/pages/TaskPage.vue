@@ -183,12 +183,8 @@
 
           <template v-slot:item.bomb="{ item }">
             <v-icon
-              v-if="
-                currentRole === 'ADMIN' ||
-                (isAuthor(item) && item.status !== 'READY')
-              "
               color="red"
-              @click="editTaskItem(item)"
+              @click="blackList(item)"
             >
               remove_circle
             </v-icon>
@@ -245,6 +241,7 @@
 import {
   getAllTasks,
   patchStatusTaskById,
+  blockClient,
   patchExecutorTaskById,
   // getTaskById,
   createTask,
@@ -537,6 +534,18 @@ export default {
         console.error({ error });
       }
     },
+
+    async blackList(item) {
+      this.editedItem = item;
+      this.editedIndex = this.tasks.indexOf(item);
+      try {
+        await blockClient(this.editedItem.id);
+        this.refresh();
+      } catch (error) {
+        console.error({ error });
+      }
+    },
+
 
     editExecutor(item) {
       this.fetchEmployeesList();
