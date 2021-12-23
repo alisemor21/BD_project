@@ -65,7 +65,7 @@
                     <v-flex xs12 sm6 md6 v-if="isNotEditExecutor">
                       <v-select
                         v-model="editedItem.priority"
-                        :items="['LOW', 'MEDIUM', 'HIGH']"
+                        :items="['LOW', 'MEDIUM', 'HIGH', 'SUPER HIGH']"
                         label="Приоритет выполнения*"
                         color="light-blue accent-3"
                         required
@@ -82,38 +82,49 @@
                       ></v-select>
                     </v-flex>
 
-                  <v-flex xs12 sm12 md12 v-if="isNotEditExecutor">
-                    <v-text-field
-                      v-model="editedItem.deadline"
-                      label="Дедлайн задания*"
-                      type="date"
-                      color="light-blue accent-3"
-                      required
-                    ></v-text-field>
-                  </v-flex>
-                  <v-flex xs12 sm6 md6 v-if="isNotEditExecutor">
-                    <v-select
-                      @change="onSelectChanged"
-                      v-model="editedItem.contactFaceId"
-                      :items="contactFaceActiveList"
-                      item-text="name"
-                      item-value="id"
-                      label="Контактное лицо *"
-                      color="light-blue accent-3"
-                      required
-                    ></v-select>
-                  </v-flex>
-                  <v-flex xs12 sm6 md6 v-if="isNotEditExecutor">
-                    <v-select
-                      v-model="editedItem.contractId"
-                      :items="contracts"
-                      item-text="id"
-                      item-value="id"
-                      label="Контракты контактного лица"
-                      color="light-blue accent-3"
-                      required
-                    ></v-select>
-                  </v-flex>
+                    <v-flex xs12 sm12 md12 v-if="isNotEditExecutor">
+                      <v-text-field
+                        v-model="editedItem.deadline"
+                        label="Дедлайн задания*"
+                        type="date"
+                        color="light-blue accent-3"
+                        required
+                      ></v-text-field>
+                    </v-flex>
+
+                    <v-flex xs12 sm12 md12>
+                      <v-text-field
+                        v-model="editedItem.timer"
+                        label="Таймер*"
+                        type="integer"
+                        color="light-blue accent-3"
+                        required
+                      ></v-text-field>
+                    </v-flex>
+
+                    <v-flex xs12 sm6 md6 v-if="isNotEditExecutor">
+                      <v-select
+                        @change="onSelectChanged"
+                        v-model="editedItem.contactFaceId"
+                        :items="contactFaceActiveList"
+                        item-text="name"
+                        item-value="id"
+                        label="Контактное лицо *"
+                        color="light-blue accent-3"
+                        required
+                      ></v-select>
+                    </v-flex>
+                    <v-flex xs12 sm6 md6 v-if="isNotEditExecutor">
+                      <v-select
+                        v-model="editedItem.contractId"
+                        :items="contracts"
+                        item-text="id"
+                        item-value="id"
+                        label="Контракты контактного лица"
+                        color="light-blue accent-3"
+                        required
+                      ></v-select>
+                    </v-flex>
 
                     <v-flex xs12 sm12 md12 v-if="isNotEditExecutor">
                       <v-textarea
@@ -162,6 +173,21 @@
             <v-chip :color="getColorPriority(item.priority)">
               {{ item.priority }}
             </v-chip>
+          </template>
+
+          <template v-slot:item.timer="{ item }">
+            <v-chip v-if="item.priority === 'HIGH'">
+              {{ currentTime }}
+            </v-chip>
+          </template>
+
+          <template v-slot:item.bomb="{ item }">
+            <v-icon
+              color="red"
+              @click="blackList(item)"
+            >
+              remove_circle
+            </v-icon>
           </template>
 
           <template v-slot:item.edit="{ item }">
@@ -215,18 +241,24 @@
 import {
   getAllTasks,
   patchStatusTaskById,
+  blockClient,
   patchExecutorTaskById,
   // getTaskById,
   createTask,
   patchTaskById,
   deleteTaskById,
 } from "@/netClient/taskService";
-import { fetchContactFaceList, fetchClientList } from "@/netClient/clientService";
+import {
+  fetchContactFaceList,
+  fetchClientList,
+} from "@/netClient/clientService";
 import { fetchClientContractList } from "@/netClient/contractService";
 import { getAllEmployees, getMyInfo } from "@/netClient/employeesService";
 export default {
   name: "TaskPage",
   data: () => ({
+    currentTime: 1580558031264,
+    timer: null,
     role: "",
     dialog: false,
     isNotEditExecutor: true,
@@ -243,6 +275,8 @@ export default {
       { text: "Дедлайн", value: "deadline" },
       { text: "Контактное лицо", value: "contactFace.name" },
       { text: "Контракт", value: "contractId" },
+      { text: "Таймер", value: "timer", sortable: false },
+      { text: "", value: "bomb", sortable: false },
       { text: "", value: "edit", sortable: false },
       { text: "", value: "editDone", sortable: false },
       { text: "", value: "editExecutor", sortable: false },
@@ -269,6 +303,9 @@ export default {
       contractId: null,
     },
   }),
+  mounted() {
+    this.startTimer();
+  },
   computed: {
     formTitle() {
       return this.editedIndex === -1 ? "Создать" : "Редактировать";
@@ -286,6 +323,19 @@ export default {
     this.fetchTaskList();
   },
   methods: {
+    startTimer() {
+      this.timer = setInterval(() => {
+        // this.currentTime = this.currentTime-10000000;
+        this.currentTime --
+        // this.currentTime = (new Date(this.currentTime)).toLocaleDateString() 
+      }, 1000);
+      
+  
+    },
+    stopTimer() {
+      clearTimeout(this.timer);
+    },
+
     refresh() {
       this.fetchTaskList();
     },
@@ -312,7 +362,8 @@ export default {
         task.employeeList[task.employeeList.length - 1].EmployeeExecutorTask;
       if (
         task.creatorId == this.currentUser.id ||
-        employeeTask.executorId == this.currentUser.id || localStorage.role == 'ADMIN'
+        employeeTask.executorId == this.currentUser.id ||
+        localStorage.role == "ADMIN"
       ) {
         return task;
       }
@@ -356,14 +407,13 @@ export default {
     async fetchActiveClients() {
       try {
         let clientsList = await fetchClientList();
-        console.log(clientsList[0].contactFaceList)
+        console.log(clientsList[0].contactFaceList);
         clientsList.forEach((element) => {
-          element.contactFaceList.forEach(contactFace => {
-            if(contactFace.contactFaceStatus == "ACTIVE"){
-            this.contactFaceActiveList.push(contactFace);
-          }  
+          element.contactFaceList.forEach((contactFace) => {
+            if (contactFace.contactFaceStatus == "ACTIVE") {
+              this.contactFaceActiveList.push(contactFace);
+            }
           });
-          
         });
       } catch (error) {
         console.error({ error });
@@ -447,9 +497,9 @@ export default {
     },
 
     editTaskItem(item) {
-        this.fetchEmployeesList();
-        this.fetchContactFaceList();
-        this.fetchActiveClients();
+      this.fetchEmployeesList();
+      this.fetchContactFaceList();
+      this.fetchActiveClients();
       this.editedItem = item;
       this.editedIndex = this.tasks.indexOf(item);
       this.dialog = true;
@@ -485,6 +535,18 @@ export default {
       }
     },
 
+    async blackList(item) {
+      this.editedItem = item;
+      this.editedIndex = this.tasks.indexOf(item);
+      try {
+        await blockClient(this.editedItem.id);
+        this.refresh();
+      } catch (error) {
+        console.error({ error });
+      }
+    },
+
+
     editExecutor(item) {
       this.fetchEmployeesList();
       this.editedItem = item;
@@ -505,6 +567,13 @@ export default {
       this.dialog = false;
       this.isNotEditExecutor = true;
       this.refresh();
+    },
+  },
+  watch: {
+    currentTime(time) {
+      if (time === 0) {
+        this.stopTimer();
+      }
     },
   },
 };
